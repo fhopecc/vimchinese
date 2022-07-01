@@ -1,6 +1,5 @@
 " 中文字型
-set guifont=Consolas:h16
-set guifontwide=YaHei_Mono:h16
+set guifont=Microsoft_YaHei_Mono:h16
 
 "f 搜尋擴充
 autocmd InsertEnter * set nohlsearch
