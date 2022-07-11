@@ -6,7 +6,15 @@ autocmd InsertEnter * set nohlsearch
 autocmd CursorHold * set nohlsearch
 hi Search guibg=Red 
 py3 from fhopecc.chinese import *;設定首碼搜尋映射()
-nmap ~ :py3 光標字元切換()<cr>
+
+py3 from zhongwen.text import 字元切換
+func! chinese#switch_char()
+    let c = strcharpart(getline('.'), charcol('.')-1, 1)
+    let sc = py3eval('字元切換("'.c.'")')
+    exec 'normal cl'.sc
+endfunc
+
+nmap ~ chinese#switch_char()<cr>
 
 " K 擴充
 vmap K y:Google <c-r>"<cr>
