@@ -16,16 +16,16 @@ func! chinese#switch_char()
     exec 'normal cl'.sc
 endfunc
 
-nmap ~ chinese#switch_char()<cr>
+nmap ~ :call chinese#switch_char()<cr>
 
 " T -> 選詞翻譯
-command! YankLastMessages  :let @*=execute('3messages')
+command! YankLastMessages :let @1=execute('1messages')
 command! -nargs=+ GTrans :echom py3eval("翻譯('<args>')")
 vmap T y:GTrans <c-r>"<cr>
 
 " K 擴充
 " Google 關鍵字查詢
-command -nargs=+ Google :!start "https://www.google.com/search?q=<args>"
+command! -nargs=+ Google :!start "https://www.google.com/search?q=<args>"
 map 'g :Google<space>
 
 vmap K y:Google <c-r>"<cr>
