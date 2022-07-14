@@ -9,7 +9,7 @@ hi Search guibg=Red
 py3 from fhopecc.chinese import *;設定首碼搜尋映射()
 py3 from zhongwen.text import 字元切換, 翻譯
 
-" 字元切換
+" ~ -> 字元切換
 func! chinese#switch_char()
     let c = strcharpart(getline('.'), charcol('.')-1, 1)
     let sc = py3eval('字元切換("'.c.'")')
