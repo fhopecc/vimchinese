@@ -5,9 +5,11 @@ set guifont=Microsoft_YaHei_Mono:h16
 autocmd InsertEnter * set nohlsearch
 autocmd CursorHold * set nohlsearch
 hi Search guibg=Red 
-py3 from fhopecc.chinese import *;設定首碼搜尋映射()
 
-py3 from zhongwen.text import 字元切換
+py3 from fhopecc.chinese import *;設定首碼搜尋映射()
+py3 from zhongwen.text import 字元切換, 翻譯
+
+" 字元切換
 func! chinese#switch_char()
     let c = strcharpart(getline('.'), charcol('.')-1, 1)
     let sc = py3eval('字元切換("'.c.'")')
@@ -16,7 +18,16 @@ endfunc
 
 nmap ~ chinese#switch_char()<cr>
 
+" T -> 選詞翻譯
+command! YankLastMessages  :let @*=execute('3messages')
+command! -nargs=+ GTrans :echom py3eval("翻譯('<args>')")
+vmap T y:GTrans <c-r>"<cr>
+
 " K 擴充
+" Google 關鍵字查詢
+command -nargs=+ Google :!start "https://www.google.com/search?q=<args>"
+map 'g :Google<space>
+
 vmap K y:Google <c-r>"<cr>
 
 " / 擴充搜尋選取項目
