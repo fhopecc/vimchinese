@@ -6,7 +6,7 @@ autocmd InsertEnter * set nohlsearch
 autocmd CursorHold * set nohlsearch
 hi Search guibg=Red 
 
-py3 from chinese import 設定首碼搜尋映射;設定首碼搜尋映射()
+py3 from chinese import *;設定首碼搜尋映射()
 py3 from zhongwen.text import 字元切換, 翻譯
 
 " ~ -> 字元切換
