@@ -152,3 +152,5 @@ cython_debug/
 #.idea/
 plugin/.chinese.vim.swp
 *.swp
+*.err
+Readme.html
