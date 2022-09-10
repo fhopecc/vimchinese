@@ -26,7 +26,7 @@ vmap T y:GTrans <c-r>"<cr>
 " K 擴充
 " Google 關鍵字查詢
 command! -nargs=+ Google :!start "https://www.google.com/search?q=<args>"
-map 'g :Google<space>
+map ,g :Google<space>
 
 vmap K y:Google <c-r>"<cr>
 
