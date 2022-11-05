@@ -2,7 +2,7 @@ py3 from chinese import *;設定首碼搜尋映射()
 py3 from zhongwen.text import 字元切換, 翻譯
 
 def! InstallYaHeiFont()
-    py3 安裝雅黑混合字()
+    py3 安裝雅黑混合字型()
 enddef
 
 " 中文字型
