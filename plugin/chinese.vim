@@ -1,6 +1,6 @@
 def! InstallYaHeiFont()
-    py3 from chinese import 安裝雅黑字形
-    py3 安裝雅黑字形()
+    py3 from chinese import 安裝雅黑混合字形
+    py3 安裝雅黑混合字形()
 enddef
 
 " 中文字型
