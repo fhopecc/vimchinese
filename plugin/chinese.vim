@@ -1,3 +1,8 @@
+def! InstallYaHeiFont()
+    py3 from chinese import 安裝雅黑字形
+    py3 安裝雅黑字形()
+enddef
+
 " 中文字型
 set guifont=Microsoft_YaHei_Mono:h16
 
@@ -10,11 +15,11 @@ py3 from chinese import *;設定首碼搜尋映射()
 py3 from zhongwen.text import 字元切換, 翻譯
 
 " ~ -> 字元切換
-func! chinese#switch_char()
+def! chinese#switch_char()
     let c = strcharpart(getline('.'), charcol('.')-1, 1)
     let sc = py3eval('字元切換("'.c.'")')
     exec 'normal cl'.sc
-endfunc
+enddef
 
 nmap ~ :call chinese#switch_char()<cr>
 
