@@ -1,6 +1,8 @@
+py3 from chinese import *;設定首碼搜尋映射()
+py3 from zhongwen.text import 字元切換, 翻譯
+
 def! InstallYaHeiFont()
-    py3 from chinese import 安裝雅黑混合字形
-    py3 安裝雅黑混合字形()
+    py3 安裝雅黑混合字()
 enddef
 
 " 中文字型
@@ -11,8 +13,6 @@ autocmd InsertEnter * set nohlsearch
 autocmd CursorHold * set nohlsearch
 hi Search guibg=Red 
 
-py3 from chinese import *;設定首碼搜尋映射()
-py3 from zhongwen.text import 字元切換, 翻譯
 
 " ~ -> 字元切換
 def! chinese#switch_char()
