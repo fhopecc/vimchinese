@@ -16,8 +16,8 @@ hi Search guibg=Red
 
 " ~ -> 字元切換
 def! chinese#switch_char()
-    let c = strcharpart(getline('.'), charcol('.')-1, 1)
-    let sc = py3eval('字元切換("'.c.'")')
+    var c = strcharpart(getline('.'), charcol('.')-1, 1)
+    var sc = py3eval('字元切換("'.c.'")')
     exec 'normal cl'.sc
 enddef
 
