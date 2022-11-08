@@ -13,12 +13,12 @@ autocmd InsertEnter * set nohlsearch
 autocmd CursorHold * set nohlsearch
 hi Search guibg=Red 
 
-
 " ~ -> 字元切換
 def! chinese#switch_char()
-    var c = strcharpart(getline('.'), charcol('.')-1, 1)
-    var sc = py3eval('字元切換("'.c.'")')
-    exec 'normal cl'.sc
+    var c = strcharpart(getline('.'), charcol('.') - 1, 1)
+    echom c
+    var sc = py3eval('字元切換("' .. c .. '")')
+    exec 'normal cl' .. sc
 enddef
 
 nmap ~ :call chinese#switch_char()<cr>
