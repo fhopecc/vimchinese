@@ -23,9 +23,10 @@ enddef
 
 nmap ~ :call chinese#switch_char()<cr>
 
-" T -> 選詞翻譯
+" T -> 單詞翻譯
 command! YankLastMessages :let @1=execute('1messages')
 command! -nargs=+ GTrans :echom py3eval("翻譯('<args>')")
+map T yiw:GTrans <c-r>"<cr>
 vmap T y:GTrans <c-r>"<cr>
 
 " K 擴充
