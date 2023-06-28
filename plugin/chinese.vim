@@ -29,9 +29,9 @@ command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
 map T yiw:GTrans <c-r>"<cr>
 vmap T y:GTrans <c-r>"<cr>
 
-" D -> 查中文字義
+" <leader>C -> 查中文字義
 command! -nargs=+ Def :call popup_atcursor(py3eval("查萌典('<args>')"), {})
-map D yl:Def <c-r>"<cr>
+map <leader>C yl:Def <c-r>"<cr>
 
 " K 擴充
 " Google 關鍵字查詢
