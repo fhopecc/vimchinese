@@ -8,7 +8,7 @@ enddef
 " 中文字型
 set guifont=Microsoft_YaHei_Mono:h16
 
-"f 搜尋擴充
+" f 搜尋擴充
 autocmd InsertEnter * set nohlsearch
 autocmd CursorHold * set nohlsearch
 hi Search guibg=Red 
@@ -30,10 +30,16 @@ map T yiw:GTrans <c-r>"<cr>
 vmap T y:GTrans <c-r>"<cr>
 
 " K -> 查中文字義
-command! -nargs=+ Def :call popup_atcursor(py3eval("查萌典('<args>')"), {})
+def! chinese#query(c: string)
+    echo c
+    var r = py3eval("查萌典('" .. c .. "')")
+    @r = join(r, '')
+    call popup_atcursor(r, {})
+enddef
+
+command! -nargs=+ Def :call chinese#query('<args>')
 nmap K yl:Def <c-r>"<cr>
 
-" K 擴充
 " Google 關鍵字查詢
 command! -nargs=+ Google :!start "https://www.google.com/search?q=<args>"
 map ,g :Google<space>
@@ -44,7 +50,7 @@ vmap K y:Google <c-r>"<cr>
 vnoremap / y/<c-r>"<cr>
 
 " 輸入法自動切換
-" 輸入法狀態提示，未开启時為白色光标，开启时橘色光标
+" 輸入法狀態提示，未開啓時為白色光標，開啓時橘色光標
 hi Cursor guifg=bg guibg=White gui=NONE  
 hi CursorIM guifg=NONE guibg=Orange gui=NONE  
 autocmd VimEnter * set imdisable
