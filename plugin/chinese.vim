@@ -34,6 +34,7 @@ def! chinese#query(c: string)
     echo c
     var r = py3eval("查萌典('" .. c .. "')")
     @r = join(r, '')
+    popup_clear()
     call popup_atcursor(r, {})
 enddef
 
