@@ -16,14 +16,14 @@ def! ScrollPopup(nlines: number)
     var firstline = prop.firstline + nlines
     var buf_lastline = str2nr(trim(win_execute(winids[0], "echo line('$')")))
     if firstline < 1
-        var firstline = 1
+        firstline = 1
     elseif prop.lastline + a:nlines > buf_lastline
-        var firstline = buf_lastline + prop.firstline - prop.lastline
+        firstline = buf_lastline + prop.firstline - prop.lastline
     endif
 
     call popup_setoptions(winids[0], {'firstline': firstline})
 enddef
-
+var 
 def! InstallYaHeiFont()
     py3 安裝雅黑混合字型()
 enddef
