@@ -1,7 +1,7 @@
 py3 from chinese import *;設定首碼搜尋映射()
 py3 from zhongwen.text import 字元切換, 翻譯, 查萌典
 
-def! ScrollPopup(nlines: number)
+def ScrollPopup(nlines: number)
     var winids = popup_list()
     if len(winids) == 0
         return
@@ -23,7 +23,7 @@ def! ScrollPopup(nlines: number)
 
     call popup_setoptions(winids[0], {'firstline': firstline})
 enddef
-var 
+
 def! InstallYaHeiFont()
     py3 安裝雅黑混合字型()
 enddef
