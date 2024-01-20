@@ -1,6 +1,29 @@
 py3 from chinese import *;設定首碼搜尋映射()
 py3 from zhongwen.text import 字元切換, 翻譯, 查萌典
 
+def! ScrollPopup(nlines: number)
+    var winids = popup_list()
+    if len(winids) == 0
+        return
+    endif
+
+    # Ignore hidden popups
+    var prop = popup_getpos(winids[0])
+    if prop.visible != 1
+        return
+    endif
+
+    var firstline = prop.firstline + nlines
+    var buf_lastline = str2nr(trim(win_execute(winids[0], "echo line('$')")))
+    if firstline < 1
+        var firstline = 1
+    elseif prop.lastline + a:nlines > buf_lastline
+        var firstline = buf_lastline + prop.firstline - prop.lastline
+    endif
+
+    call popup_setoptions(winids[0], {'firstline': firstline})
+enddef
+
 def! InstallYaHeiFont()
     py3 安裝雅黑混合字型()
 enddef
