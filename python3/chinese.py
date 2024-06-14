@@ -45,3 +45,5 @@ $objFolder.CopyHere("{font}")
     if result.returncode !=0:
         raise WindowsError(f'執行 powershell 發生錯誤：{result}；指令{cmd}')
     print(f'安裝雅黑混合字型完成!')
+if __name__ == '__main__':
+    安裝雅黑混合字型()
