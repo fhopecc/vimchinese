@@ -75,12 +75,13 @@ vnoremap / y/<c-r>"<cr>
 
 " 輸入法自動切換
 " 輸入法狀態提示，未開啓時為白色光標，開啓時橘色光標
-hi Cursor guifg=bg guibg=White gui=NONE  
-hi CursorIM guifg=NONE guibg=Orange gui=NONE  
-autocmd VimEnter * set imdisable
-autocmd InsertLeave * set imdisable
-autocmd InsertEnter * set noimdisable
-autocmd CmdlineEnter * set noimdisable
-autocmd TerminalOpen * set noimdisable
+"   如使用小狼亳輸入法，因其本身 vim 模式支援輸入法自動切換，以下可註解
+" hi Cursor guifg=bg guibg=White gui=NONE  
+" hi CursorIM guifg=NONE guibg=Orange gui=NONE  
+" autocmd VimEnter * set imdisable
+" autocmd InsertLeave * set imdisable
+" autocmd InsertEnter * set noimdisable
+" autocmd CmdlineEnter * set noimdisable
+" autocmd TerminalOpen * set noimdisable
 
-nnoremap / :set noimdisable<cr>/
+" nnoremap / :set noimdisable<cr>/
