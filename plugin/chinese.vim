@@ -1,7 +1,7 @@
 py3 from chinese import *;設定首碼搜尋映射()
 py3 from zhongwen.text import 字元切換, 翻譯, 查萌典
 
-def ScrollPopup(nlines: number)
+def! ScrollPopup(nlines: number)
     var winids = popup_list()
     if len(winids) == 0
         return
@@ -73,6 +73,21 @@ vmap K y:Google <c-r>"<cr>
 " / 擴充搜尋選取項目
 vnoremap / y/<c-r>"<cr>
 
+" 臚列標題
+def! chinese#list_titles(level: number): string
+g:_level = level
+python3 << EOF
+from zhongwen.文 import 臚列標題
+import vim
+buffer = '\n'.join(vim.current.buffer) 
+titles = 臚列標題(buffer, vim.vars['_level'] )
+vim.vars['_titles'] = titles
+EOF
+call append(line('.'), g:_titles)
+return g:_titles
+enddef
+
+
 " 輸入法自動切換
 " 輸入法狀態提示，未開啓時為白色光標，開啓時橘色光標
 "   如使用小狼亳輸入法，因其本身 vim 模式支援輸入法自動切換，以下可註解
@@ -86,38 +101,3 @@ vnoremap / y/<c-r>"<cr>
 
 " nnoremap / :set noimdisable<cr>/
 
-def ExtractAndNumberHeaders(level: number = 3): string
-    # 驗證級別參數 (1-6)
-    if level < 1 || level > 6
-        echohl ErrorMsg
-        echo "錯誤: 標題級別必須是 1-6 的數字"
-        echohl None
-        return ""
-    endif
-
-    var result: list<string> = []
-    var cn_numbers = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
-    var counter = 1
-    var pattern = '^' .. repeat('#', level) .. '\s\+'
-
-    for line in getline(1, '$')
-        if line =~ pattern
-            # 移除標記和空白
-            var cleaned = substitute(line, pattern, '', '')
-
-            # 添加中文序號
-            var numbered = counter <= len(cn_numbers) 
-                ? '('.cn_numbers[counter - 1].') '.cleaned
-                : '('.string(counter).') '.cleaned
-
-            add(result, numbered)
-            counter += 1
-        endif
-    endfor
-
-    return join(result, '；')
-enddef
-
-# 定義用戶命令
-command! -nargs=? ExtractHeaders echo ExtractAndNumberHeaders(<args>)
-command! -nargs=? -register CopyHeaders execute 'let @' .. escape(<q-reg>, '\"') .. ' = ExtractAndNumberHeaders(' .. (<q-args> ? <q-args> : '') .. ')'
