@@ -85,3 +85,39 @@ vnoremap / y/<c-r>"<cr>
 " autocmd TerminalOpen * set noimdisable
 
 " nnoremap / :set noimdisable<cr>/
+
+def ExtractAndNumberHeaders(level: number = 3): string
+    # 驗證級別參數 (1-6)
+    if level < 1 || level > 6
+        echohl ErrorMsg
+        echo "錯誤: 標題級別必須是 1-6 的數字"
+        echohl None
+        return ""
+    endif
+
+    var result: list<string> = []
+    var cn_numbers = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
+    var counter = 1
+    var pattern = '^' .. repeat('#', level) .. '\s\+'
+
+    for line in getline(1, '$')
+        if line =~ pattern
+            # 移除標記和空白
+            var cleaned = substitute(line, pattern, '', '')
+
+            # 添加中文序號
+            var numbered = counter <= len(cn_numbers) 
+                ? '('.cn_numbers[counter - 1].') '.cleaned
+                : '('.string(counter).') '.cleaned
+
+            add(result, numbered)
+            counter += 1
+        endif
+    endfor
+
+    return join(result, '；')
+enddef
+
+# 定義用戶命令
+command! -nargs=? ExtractHeaders echo ExtractAndNumberHeaders(<args>)
+command! -nargs=? -register CopyHeaders execute 'let @' .. escape(<q-reg>, '\"') .. ' = ExtractAndNumberHeaders(' .. (<q-args> ? <q-args> : '') .. ')'
