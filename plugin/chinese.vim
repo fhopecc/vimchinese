@@ -1,6 +1,17 @@
 py3 from chinese import *;設定首碼搜尋映射()
 py3 from zhongwen.text import 字元切換, 翻譯, 查萌典
 
+def! ToInform()
+# 審核意見轉通知
+:%s/聲復\(本室.\+一案\)，謹擬具處理意見，簽請鑒核。/聲復\1，核復如說明二，請查照辦理見復。/ge
+:%s/依據\(.\+函\)辦理。/復\1。/ge
+:%s/旨案.\+，擬具處理意見如次：/核復事項：/ge
+:%s/宜蘭縣政府/貴府/ge
+:%s/該府/貴府/ge
+:%s/據復：/承復：/ge
+:%s/擬復請/請/ge
+enddef
+
 def! ScrollPopup(nlines: number)
     var winids = popup_list()
     if len(winids) == 0
