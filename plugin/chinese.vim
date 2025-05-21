@@ -10,6 +10,7 @@ def! ToInform()
 :%s/該府/貴府/ge
 :%s/據復：/承復：/ge
 :%s/擬復請/請/ge
+:%s/擬復//ge
 enddef
 
 def! ScrollPopup(nlines: number)
