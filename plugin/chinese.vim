@@ -1,7 +1,7 @@
 py3 from chinese import *;設定首碼搜尋映射()
 py3 from zhongwen.text import 字元切換, 翻譯, 查萌典
 
-def! ToInform()
+def! chinese#to_inform()
 # 審核意見轉通知
 :%s/聲復\(本室.\+一案\)，謹擬具處理意見，簽請鑒核。/聲復\1，核復如說明二，請查照辦理見復。/ge
 :%s/依據\(.\+函\)辦理。/復\1。/ge
@@ -98,7 +98,6 @@ EOF
 call append(line('.'), g:_titles)
 return g:_titles
 enddef
-
 
 " 輸入法自動切換
 " 輸入法狀態提示，未開啓時為白色光標，開啓時橘色光標
