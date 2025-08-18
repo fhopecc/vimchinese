@@ -28,23 +28,30 @@ command! YankLastMessages :let @1=execute('1messages')
 command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
 map T yiw:GTrans <c-r>"<cr>
 vmap T y:GTrans <c-r>"<cr>
-
 " K -> 中文字元查字義、英文單詞查中文譯詞、URL 開網頁。
 def chinese#keyword()
+    var WORD = expand('<cWORD>') # 含特殊字元關鍵字
+    var keyword = WORD
+    WORD = substitute(WORD, '"', '', 'g')
+    WORD = substitute(WORD, "'", '', 'g')
     var word = expand('<cword>')
     var res = word # 結果
 
     # 取游標字元
     var char = strcharpart(getline('.'), charcol('.') - 1, 1)
 
-    if word =~# '^\w\+://' # URL
-        execute 'silent! !start "" ' .. shellescape(res)
+    if WORD =~# '^\w\+://' # URL
+        keyword = WORD
+        res = keyword
+        var cmd = '!start ' .. res
+        execute cmd
     elseif word =~# '^[A-Za-z]\+$' # 英語單詞
+        keyword = word
         res = py3eval("翻譯('" .. word .. "')")
         popup_clear(1)
         call popup_atcursor(res, {})
     elseif char =~# '[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\u20000-\u2FA1F]'
-        word = char
+        keyword = char
         res = py3eval("查萌典('" .. char .. "')")
         popup_clear(1)
         call popup_atcursor(res, {})
@@ -53,7 +60,7 @@ def chinese#keyword()
         res = join(res, "\n")
     endif
     @+ = res
-    echo "查詢單詞" .. word .. "完成！"
+    echo "查詢單詞" .. keyword .. "完成！"
 enddef
 
 " command! -nargs=+ Def :call chinese#query('<args>')
