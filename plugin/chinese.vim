@@ -1,5 +1,6 @@
 py3 from chinese import *;設定首碼搜尋映射()
 py3 from zhongwen.text import 字元切換, 翻譯, 查萌典
+py3 from zhongwen.文 import geturl
 
 def! InstallYaHeiFont()
     py3 安裝雅黑混合字型()
@@ -29,7 +30,9 @@ command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
 map T yiw:GTrans <c-r>"<cr>
 vmap T y:GTrans <c-r>"<cr>
 " K -> 中文字元查字義、英文單詞查中文譯詞、URL 開網頁。
-def chinese#keyword()
+def! chinese#keyword()
+
+    # 1. [博物館法](https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0170101)
     var WORD = expand('<cWORD>') # 含特殊字元關鍵字
     var keyword = WORD
     WORD = substitute(WORD, '"', '', 'g')
@@ -40,9 +43,9 @@ def chinese#keyword()
     # 取游標字元
     var char = strcharpart(getline('.'), charcol('.') - 1, 1)
 
-    if WORD =~# '^\w\+://' # URL
-        keyword = WORD
-        res = keyword
+    if WORD =~# '^\S\+://' # URL
+        res = py3eval("geturl('" .. WORD .. "')")
+        keyword = res
         var cmd = '!start ' .. res
         execute cmd
     elseif word =~# '^[A-Za-z]\+$' # 英語單詞
