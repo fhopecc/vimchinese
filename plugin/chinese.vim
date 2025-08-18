@@ -29,17 +29,35 @@ command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
 map T yiw:GTrans <c-r>"<cr>
 vmap T y:GTrans <c-r>"<cr>
 
-" K -> 查中文字義
-def! chinese#query(c: string)
-    echo c
-    var r = py3eval("查萌典('" .. c .. "')")
-    @r = join(r, '')
-    popup_clear(1)
-    call popup_atcursor(r, {})
+" K -> 中文字元查字義、英文單詞查中文譯詞、URL 開網頁。
+def chinese#keyword()
+    var word = expand('<cword>')
+    var res = word # 結果
+
+    # 取游標字元
+    var char = strcharpart(getline('.'), charcol('.') - 1, 1)
+
+    if word =~# '^\w\+://' # URL
+        execute 'silent! !start "" ' .. shellescape(res)
+    elseif word =~# '^[A-Za-z]\+$' # 英語單詞
+        res = py3eval("翻譯('" .. word .. "')")
+        popup_clear(1)
+        call popup_atcursor(res, {})
+    elseif char =~# '[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\u20000-\u2FA1F]'
+        word = char
+        res = py3eval("查萌典('" .. char .. "')")
+        popup_clear(1)
+        call popup_atcursor(res, {})
+    endif
+    if type(res) == v:t_list
+        res = join(res, "\n")
+    endif
+    @+ = res
+    echo "查詢單詞" .. word .. "完成！"
 enddef
 
-command! -nargs=+ Def :call chinese#query('<args>')
-nmap K yl:Def <c-r>"<cr>
+" command! -nargs=+ Def :call chinese#query('<args>')
+nmap K :call chinese#keyword()<cr>
 
 " Google 關鍵字查詢
 command! -nargs=+ Google :!start "https://www.google.com/search?q=<args>"
