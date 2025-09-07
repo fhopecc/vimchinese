@@ -78,7 +78,7 @@ vmap K y:Google <c-r>"<cr>
 " / 擴充搜尋選取項目
 vnoremap / y/<c-r>"<cr>
 
-" ,z -> 詢問智譜大語言模型
+" ,z -> 詢問谷歌雙子星模型
 def! chinese#query_llm(question: string)
 b:question = question
 python3 << EOF
