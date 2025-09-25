@@ -37,6 +37,34 @@ enddef
 command ToHTML call ToHTML()
 map <buffer> <leader>e :ToHTML<CR>
 
+# 公布至洄瀾打狗人網站
+def Post()
+py3 << EOF
+import vim
+import logging
+from pathlib import Path
+file = vim.eval('expand("%:p")')
+logging.getLogger().setLevel(logging.ERROR)
+張貼(file)
+logging.getLogger().setLevel(logging.INFO)
+vim.command(f'echo "【{Path(file).stem}】已張貼至洄瀾打狗人。"')
+EOF
+enddef
+command Post call Post()
+map <buffer> <leader>P :Post<CR>
+
+def ToDOCX()
+w!
+py3 << EOF
+from zhongwen.office_document import markdown2docx
+import vim
+file = vim.eval('expand("%:p")')
+markdown2docx(file)
+EOF
+enddef
+command ToDOCX call ToDOCX()
+
+
 def IsInMath()
     for id in synstack(line("."), col("."))
         if synIDattr(id, "name") == "mkdMath"
@@ -58,32 +86,6 @@ def ToPPT()
     execute("silent :! \"" . powerpnt . "\" /S " . pptx)
 enddef
 map <buffer> <leader>S :call markdown#2pptx()<CR>
-
-def ToDOCX()
-w!
-py3 << EOF
-from zhongwen.office_document import markdown2docx
-import vim
-file = vim.eval('expand("%:p")')
-markdown2docx(file)
-EOF
-enddef
-
-# 公布至洄瀾打狗人網站
-def Post()
-py3 << EOF
-import vim
-import logging
-from pathlib import Path
-file = vim.eval('expand("%:p")')
-logging.getLogger().setLevel(logging.ERROR)
-張貼(file)
-logging.getLogger().setLevel(logging.INFO)
-vim.command(f'echo "【{Path(file).stem}】已張貼至洄瀾打狗人。"')
-EOF
-enddef
-command Post call Post()
-map <buffer> <leader>P Post<CR>
 
 # 游標關鍵字檢索
 # nnoremap <buffer><expr> K ":G ".expand('<cword>')."<cr>"
