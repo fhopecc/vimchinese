@@ -16,4 +16,4 @@ def g:PressKey(key: string): string
     return 'b'
 enddef
 
-SetupIM()
+# SetupIM()
