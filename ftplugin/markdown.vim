@@ -2,7 +2,6 @@ vim9script
 # 繼承純文字模式
 runtime! ftplugin/text.vim
 py3 from fhopecc.洄瀾打狗人札記 import 張貼
-py3 from fhopecc.vim_helper import 網頁表達
 
 #顯示目次
 nmap <buffer> ;T :Toc<cr>
@@ -12,8 +11,8 @@ nmap <buffer> ;T :Toc<cr>
 g:vim_markdown_math = 1
 
 # 臚列標題
-export def ListTitle(level: number): string
-    g:_level = level
+def ListTitle(level: string): string
+    g:_level = str2nr(level)
 python3 << EOF
 from zhongwen.文 import 臚列標題
 import vim
@@ -24,6 +23,19 @@ EOF
     append(line('.'), g:_titles)
     return g:_titles
 enddef
+command -nargs=1 ListTitle call ListTitle(<f-args>)
+
+def ToHTML()
+    w!
+py3 << EOF
+from zhongwen.markdown import 網頁表達
+import vim
+file = vim.eval('expand("%:p")')
+網頁表達(file)
+EOF
+enddef
+command ToHTML call ToHTML()
+map <buffer> <leader>e :ToHTML<CR>
 
 def IsInMath()
     for id in synstack(line("."), col("."))
@@ -46,16 +58,6 @@ def ToPPT()
     execute("silent :! \"" . powerpnt . "\" /S " . pptx)
 enddef
 map <buffer> <leader>S :call markdown#2pptx()<CR>
-
-def ToHTML()
-    w!
-py3 << EOF
-import vim
-file = vim.eval('expand("%:p")')
-網頁表達(file)
-EOF
-enddef
-map <buffer> <leader>e :ToHTML<CR>
 
 def ToDOCX()
 w!
