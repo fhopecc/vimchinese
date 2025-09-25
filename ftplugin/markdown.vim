@@ -82,7 +82,8 @@ logging.getLogger().setLevel(logging.INFO)
 vim.command(f'echo "【{Path(file).stem}】已張貼至洄瀾打狗人。"')
 EOF
 enddef
-map <buffer> <leader>P :call markdown#post()<CR>
+command Post call Post()
+map <buffer> <leader>P Post<CR>
 
 # 游標關鍵字檢索
 # nnoremap <buffer><expr> K ":G ".expand('<cword>')."<cr>"
