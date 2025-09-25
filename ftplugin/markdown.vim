@@ -64,7 +64,6 @@ EOF
 enddef
 command ToDOCX call ToDOCX()
 
-
 def IsInMath()
     for id in synstack(line("."), col("."))
         if synIDattr(id, "name") == "mkdMath"
