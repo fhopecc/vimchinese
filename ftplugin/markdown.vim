@@ -23,7 +23,7 @@ EOF
     append(line('.'), g:_titles)
     return g:_titles
 enddef
-command -nargs=1 ListTitle call ListTitle(<f-args>)
+command! -nargs=1 ListTitle call ListTitle(<f-args>)
 
 def ToHTML()
     w!
@@ -34,7 +34,7 @@ file = vim.eval('expand("%:p")')
 網頁表達(file)
 EOF
 enddef
-command ToHTML call ToHTML()
+command! ToHTML call ToHTML()
 map <buffer> <leader>e :ToHTML<CR>
 
 # 公布至洄瀾打狗人網站
@@ -50,7 +50,7 @@ logging.getLogger().setLevel(logging.INFO)
 vim.command(f'echo "【{Path(file).stem}】已張貼至洄瀾打狗人。"')
 EOF
 enddef
-command Post call Post()
+command! Post call Post()
 map <buffer> <leader>P :Post<CR>
 
 def ToDOCX()
@@ -62,15 +62,25 @@ file = vim.eval('expand("%:p")')
 markdown2docx(file)
 EOF
 enddef
-command ToDOCX call ToDOCX()
+command! ToDOCX call ToDOCX()
 
-def IsInMath()
-    for id in synstack(line("."), col("."))
-        if synIDattr(id, "name") == "mkdMath"
-            return v:true
+def g:IsInMath(): bool
+    # 取得游標位置 (當前行、當前列) 上的語法 ID 堆疊
+    var ids: list<number> = synstack(line('.'), col('.'))
+    var name: string     # <--- 變數改為 name (string 型別)
+
+    # 迴圈遍歷所有的語法 ID
+    for synid in ids
+        # 直接取得語法名稱 (回傳 string)
+        name = synIDattr(synid, 'name')
+
+        # 檢查名稱是否為 'mkdMath'
+        # 這裡也檢查了 name 是否為空字串 (即沒有語法名稱)
+        if name == 'mkdMath'
+            return true
         endif
     endfor
-    return v:false
+    return false
 enddef
 
 def ToPPT()
