@@ -13,7 +13,7 @@ map <leader>c :set noimdisable<cr>:Leaderf function<cr>
 # 至定義
 nnoremap <buffer> gd <Cmd>py3 from zhongwen.python_dev import 至定義;至定義()<CR>
 
-# 執行目前編輯程式
+# 執行編輯中腳本
 def ExecutePython()
     w!
     MaxWindow
@@ -22,13 +22,13 @@ enddef
 command ExecutePython call ExecutePython()
 map <buffer> <leader>e :ExecutePython<cr>
 
-# 測試目前編輯程式
+# 測試編輯中腳本
 def TestPython()
     py3 from zhongwen.python_dev import find_testfile
     w!
     var testfile = py3eval("find_testfile(r'".expand('%')."')")
     MaxWindow
-    call term_start('python ' .. testfile)
+    call term_start('py ' .. testfile)
 enddef
 command TestPython call TestPython()
 map <buffer> <leader>t :TestPython<cr>
