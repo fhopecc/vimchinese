@@ -26,7 +26,7 @@ map <buffer> <leader>e :ExecutePython<cr>
 def TestPython()
     py3 from zhongwen.python_dev import find_testfile
     w!
-    var testfile = py3eval("find_testfile(r'".expand('%')."')")
+    var testfile = py3eval("find_testfile(r'" .. expand('%') .. "')")
     MaxWindow
     call term_start('py ' .. testfile)
 enddef
