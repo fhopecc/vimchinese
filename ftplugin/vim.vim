@@ -4,6 +4,9 @@ vim9script
 noremap <buffer> <leader>e :w!<cr>:so %<cr>
 noremap <buffer> <leader>E :execute getline(".")<cr>
 
+# K -> 查詢游標指令說明
+noremap <buffer> <leader>K :h <c-r><c-w><cr>
+
 # 布署
 map <buffer> <expr> <plug>deployvim ":w!<CR>:R cd " . g:wpath . "\\vimfiles&&inv d<CR>" 
 map <buffer> <leader>D <plug>deployvim
