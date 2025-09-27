@@ -1,6 +1,5 @@
 vim9script
 
-
 command! -buffer ChangeWindow normal <c-w>w
 command! -buffer MaxWindow normal <c-w>o
 
@@ -19,7 +18,7 @@ def ExecutePython()
     MaxWindow
     term_start('py ' .. expand('%'))
 enddef
-command ExecutePython call ExecutePython()
+command! ExecutePython call ExecutePython()
 map <buffer> <leader>e :ExecutePython<cr>
 
 # 測試編輯中腳本
@@ -30,7 +29,7 @@ def TestPython()
     MaxWindow
     call term_start('py ' .. testfile)
 enddef
-command TestPython call TestPython()
+command! TestPython call TestPython()
 map <buffer> <leader>t :TestPython<cr>
 
 # 交談式介面實驗
