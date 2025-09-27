@@ -1,5 +1,3 @@
-vim9script
-
 py3 from chinese import *;設定首碼搜尋映射()
 py3 from zhongwen.text import 字元切換, 翻譯, 查萌典
 py3 from zhongwen.文 import geturl
