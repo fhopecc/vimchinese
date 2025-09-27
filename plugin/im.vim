@@ -17,32 +17,31 @@ EOF
 enddef
 
 
-# 定義一個函數，用來建立並顯示懸浮視窗
+# 游標顯示輸入彈窗
 def ShowInputPopup()
     popup_clear()
+    highlight InputPopup guibg=#282828 guifg=white
+    highlight InputLine guifg=#98FB98 
+    var title = '火'
     var content = [
-        'Hello, Vim!',
-        '這是一個用 vim9script 建立的',
-        '懸浮視窗範例。',
-        '',
-        '按 q 鍵或 Esc 即可關閉。'
+        '1.火',
+        '2.炎 火火',
     ]
-
+    var width = 35 
     # 設定懸浮視窗的選項，所有選項都放在一個字典裡
-    var options = {title: '我的彈出式視窗', 
-                   border: [], 
-                   line: 5,
-                   col: 10,                   
-                   width: 35,                  
+    var options = {title: title, 
+                   line: winline() + 1,
+                   col: wincol() - width / 4,                   
+                   width: width,                  
                    height: 6,                  
-                   close_command: 'q',         
+                   highlight: 'InputPopup',
+                   title_highlight: 'InputLine', 
                    maxheight: 10,              
     }
 
-    var popup_id = popup_create(['a', 'b'], options)
-
+    var popup_id = popup_create(content, options)
+    matchadd('InputLine', '\%1l', -1, popup_id)
     echom '已建立一個 ID 為 ' .. popup_id .. ' 的懸浮視窗。'
 enddef
 
-# 呼叫函數，執行程式碼
 # ShowInputPopup()
