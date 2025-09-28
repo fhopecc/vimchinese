@@ -35,7 +35,7 @@ def g:PressCtrlMinus(): string
         input_method = ''
         echom 'canjie -> ascii'
     endif
-    UpdateStatus()
+    g:UpdateStatus()
     return ''
 enddef
 
