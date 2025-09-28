@@ -69,7 +69,7 @@ EOF
     autocmd InsertLeave * LeaveInsertMode()
     UpdateStatus()
 enddef
-command! SetupIM :SetupIM()
+command! SetupIM call SetupIM()
 
 def LeaveInsertMode()
     popup_clear()
