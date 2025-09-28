@@ -62,8 +62,6 @@ for key in 'abcdefghijklmnopqrstuvwxyz':
 
 設定行輸入按鍵對映 = f'inoremap <space> <c-r>=g:PressSpace()<cr>'
 vim.command(設定行輸入按鍵對映)
-
-vim.command('echom "設定完成"')
 EOF
     autocmd! InsertLeave
     autocmd InsertLeave * g:LeaveInsertMode()
