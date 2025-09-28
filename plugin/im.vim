@@ -13,6 +13,31 @@ def g:PressLowerCaseLetters(key: string): string
     return key
 enddef
 
+# 輸入符號
+def g:PressSymbols(key: string): string
+    popup_clear()
+    input_buffer = ''
+    if input_method == 'cangjie'    
+        if key == ','
+            return '，'
+        elseif key == '.'
+            return '。'
+        elseif key == '?'
+            return '？'
+        elseif key == ';'
+            return '；'
+        elseif key == ':'
+            return '：'
+        elseif key == '['
+            return '「'
+        elseif key == ']'
+            return '」'
+        endif
+        return ''
+    endif
+    return key
+enddef
+
 # 空格鍵係出第一個候選字
 def g:PressSpace(): string
     if input_method == 'cangjie'    
@@ -57,6 +82,10 @@ vim.command(設定行輸入按鍵對映)
 
 for key in 'abcdefghijklmnopqrstuvwxyz':
     設定行輸入按鍵對映 = f'inoremap {key} <c-r>=g:PressLowerCaseLetters("{key}")<cr>'
+    vim.command(設定行輸入按鍵對映)
+
+for key in ',.?;:[]':
+    設定行輸入按鍵對映 = f'inoremap {key} <c-r>=g:PressSymbols("{key}")<cr>'
     vim.command(設定行輸入按鍵對映)
 
 設定行輸入按鍵對映 = f'inoremap <space> <c-r>=g:PressSpace()<cr>'
