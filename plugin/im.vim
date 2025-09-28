@@ -3,7 +3,7 @@ vim9script
 var input_buffer = ''
 var input_method = ''
 
-def g:PressLowerCaseLetters(key: string): string
+def PressLowerCaseLetters(key: string): string
     if input_method == 'cangjie'    
         if match(key, '\l') == 0 # key in [a..b]
             input_buffer = input_buffer .. key
@@ -69,6 +69,7 @@ EOF
     autocmd InsertLeave * LeaveInsertMode()
     UpdateStatus()
 enddef
+command! SetupIM :SetupIM()
 
 def LeaveInsertMode()
     popup_clear()
@@ -101,4 +102,4 @@ def ShowInputPopup()
     echom '已建立一個 ID 為 ' .. popup_id .. ' 的懸浮視窗。'
 enddef
 
-SetupIM()
+SetupIM
