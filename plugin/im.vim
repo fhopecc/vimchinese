@@ -103,3 +103,4 @@ def ShowInputPopup()
 enddef
 
 SetupIM
+noremap <c-_> :SetupIM
