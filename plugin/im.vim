@@ -128,4 +128,6 @@ def g:ShowInputPopup()
     echom '已建立一個 ID 為 ' .. popup_id .. ' 的懸浮視窗。'
 enddef
 
-SetupIM
+if !g:disableim
+    SetupIM
+endif
