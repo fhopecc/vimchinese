@@ -1,35 +1,92 @@
 vim9script
 
-def PressKey(key: string): string
-    echom "按下"
-    echom key
-    return 'b'
+var input_buffer = ''
+var input_method = ''
+
+def g:PressLowerCaseLetters(key: string): string
+    if input_method == 'cangjie'    
+        if match(key, '\l') == 0 # key in [a..b]
+            input_buffer = input_buffer .. key
+            ShowInputPopup()
+            return ''
+        endif
+    endif
+    return key
+enddef
+
+# 空格鍵係出第一個候選字
+def g:PressSpace(): string
+    if input_method == 'cangjie'    
+        py3 from zhongwen.文 import 倉頡檢字
+        var candidate = py3eval('倉頡檢字("' .. input_buffer .. '")[0][0]')
+        popup_clear()
+        input_buffer = ''
+        return candidate
+    endif
+    return ' '
+enddef 
+
+# Ctrl - 切換中英輸入法
+def g:PressCtrlMinus(): string
+    if input_method == ''
+        input_method = 'cangjie'
+        echom 'ascii -> canjie'
+    else
+        input_method = ''
+        echom 'canjie -> ascii'
+    endif
+    UpdateStatus()
+    return ''
+enddef
+
+# 更新輸入法狀態
+def UpdateStatus()
+    if input_method == ''
+        hi Cursor guibg=green ctermbg=green
+    else
+        hi Cursor guibg=yellow ctermbg=yellow
+    endif
 enddef
 
 def SetupIM()
+    set noshowmode
 python3 << EOF
 import vim
-key = 'a'
-設定行輸入按鍵對映 = f'inoremap <buffer> <expr> {key} <C-R>=PressKey("{key}")'
+
+設定行輸入按鍵對映 = f'inoremap <buffer> <c-_> <c-r>=PressCtrlMinus()<cr>'
 vim.command(設定行輸入按鍵對映)
+
+for key in 'abcdefghijklmnopqrstuvwxyz':
+    設定行輸入按鍵對映 = f'inoremap <buffer> {key} <c-r>=PressLowerCaseLetters("{key}")<cr>'
+    vim.command(設定行輸入按鍵對映)
+
+設定行輸入按鍵對映 = f'inoremap <buffer> <space> <c-r>=PressSpace()<cr>'
+vim.command(設定行輸入按鍵對映)
+
 vim.command('echom "設定完成"')
 EOF
+    autocmd! InsertLeave
+    autocmd InsertLeave * LeaveInsertMode()
+    UpdateStatus()
 enddef
 
+def LeaveInsertMode()
+    popup_clear()
+    input_buffer = ''
+enddef
 
 # 游標顯示輸入彈窗
 def ShowInputPopup()
+    py3 from zhongwen.文 import 倉頡檢字
     popup_clear()
     highlight InputPopup guibg=#282828 guifg=white
     highlight InputLine guifg=#98FB98 
-    var title = '火'
-    var content = [
-        '1.火',
-        '2.炎 火火',
-    ]
-    var width = 35 
+    var candidates = py3eval('[f"{i+1}.{c[0]} {c[1:]}" for i, c in enumerate(倉頡檢字("' .. input_buffer .. '"))]')
+    var content = candidates
+    var width = 35
+ 
     # 設定懸浮視窗的選項，所有選項都放在一個字典裡
-    var options = {title: title, 
+    var options = {title: candidates[0][4 :] .. '_ ',
                    line: winline() + 1,
                    col: wincol() - width / 4,                   
                    width: width,                  
@@ -44,4 +101,4 @@ def ShowInputPopup()
     echom '已建立一個 ID 為 ' .. popup_id .. ' 的懸浮視窗。'
 enddef
 
-# ShowInputPopup()
+SetupIM()
