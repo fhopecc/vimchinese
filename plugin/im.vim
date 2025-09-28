@@ -7,7 +7,7 @@ def g:PressLowerCaseLetters(key: string): string
     if input_method == 'cangjie'    
         if match(key, '\l') == 0 # key in [a..b]
             input_buffer = input_buffer .. key
-            ShowInputPopup()
+            # ShowInputPopup()
             return ''
         endif
     endif
