@@ -24,7 +24,6 @@ def g:PressSpace(): string
     endif
     return ' '
 enddef 
-
 # Ctrl - 切換中英輸入法
 def g:PressCtrlMinus(): string
     if input_method == ''
