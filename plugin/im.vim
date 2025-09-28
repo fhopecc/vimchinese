@@ -50,6 +50,7 @@ enddef
 
 def SetupIM()
     set noshowmode
+    set iminsert=0
 python3 << EOF
 import vim
 
