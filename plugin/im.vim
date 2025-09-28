@@ -54,14 +54,14 @@ def SetupIM()
 python3 << EOF
 import vim
 
-設定行輸入按鍵對映 = f'inoremap <buffer> <c-_> <c-r>=PressCtrlMinus()<cr>'
+設定行輸入按鍵對映 = f'inoremap <c-_> <c-r>=PressCtrlMinus()<cr>'
 vim.command(設定行輸入按鍵對映)
 
 for key in 'abcdefghijklmnopqrstuvwxyz':
-    設定行輸入按鍵對映 = f'inoremap <buffer> {key} <c-r>=PressLowerCaseLetters("{key}")<cr>'
+    設定行輸入按鍵對映 = f'inoremap {key} <c-r>=PressLowerCaseLetters("{key}")<cr>'
     vim.command(設定行輸入按鍵對映)
 
-設定行輸入按鍵對映 = f'inoremap <buffer> <space> <c-r>=PressSpace()<cr>'
+設定行輸入按鍵對映 = f'inoremap <space> <c-r>=PressSpace()<cr>'
 vim.command(設定行輸入按鍵對映)
 
 vim.command('echom "設定完成"')
@@ -104,4 +104,3 @@ def ShowInputPopup()
 enddef
 
 SetupIM
-noremap <c-_> :SetupIM
