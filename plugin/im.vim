@@ -68,7 +68,7 @@ vim.command('echom "設定完成"')
 EOF
     autocmd! InsertLeave
     autocmd InsertLeave * LeaveInsertMode()
-    UpdateStatus()
+    g:UpdateStatus()
 enddef
 command! SetupIM call SetupIM()
 
