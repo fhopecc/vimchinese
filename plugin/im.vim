@@ -67,10 +67,10 @@ vim.command(設定行輸入按鍵對映)
 vim.command('echom "設定完成"')
 EOF
     autocmd! InsertLeave
-    autocmd InsertLeave * LeaveInsertMode()
+    autocmd InsertLeave * g:LeaveInsertMode()
     g:UpdateStatus()
 enddef
-command! SetupIM call SetupIM()
+command! SetupIM call g:SetupIM()
 
 def g:LeaveInsertMode()
     popup_clear()
