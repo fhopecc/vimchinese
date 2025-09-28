@@ -3,7 +3,7 @@ vim9script
 var input_buffer = ''
 var input_method = ''
 
-def PressLowerCaseLetters(key: string): string
+def g:PressLowerCaseLetters(key: string): string
     if input_method == 'cangjie'    
         if match(key, '\l') == 0 # key in [a..b]
             input_buffer = input_buffer .. key
@@ -40,7 +40,7 @@ def g:PressCtrlMinus(): string
 enddef
 
 # 更新輸入法狀態
-def UpdateStatus()
+def g:UpdateStatus()
     if input_method == ''
         hi Cursor guibg=green ctermbg=green
     else
@@ -48,7 +48,7 @@ def UpdateStatus()
     endif
 enddef
 
-def SetupIM()
+def g:SetupIM()
     set noshowmode
     set iminsert=0
 python3 << EOF
@@ -72,13 +72,13 @@ EOF
 enddef
 command! SetupIM call SetupIM()
 
-def LeaveInsertMode()
+def g:LeaveInsertMode()
     popup_clear()
     input_buffer = ''
 enddef
 
 # 游標顯示輸入彈窗
-def ShowInputPopup()
+def g:ShowInputPopup()
     py3 from zhongwen.文 import 倉頡檢字
     popup_clear()
     highlight InputPopup guibg=#282828 guifg=white
