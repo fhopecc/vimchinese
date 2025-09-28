@@ -58,12 +58,12 @@ def g:PressCtrlMinus(): string
         input_method = ''
         echom 'canjie -> ascii'
     endif
-    g:UpdateStatus()
+    UpdateStatus()
     return ''
 enddef
 
-# 更新輸入法狀態
-def g:UpdateStatus()
+# 更新輸入法狀態，倉頡輸入法光標為黃色，英文為綠色。
+def UpdateStatus()
     if input_method == ''
         hi Cursor guibg=green ctermbg=green
     else
@@ -93,7 +93,7 @@ vim.command(設定行輸入按鍵對映)
 EOF
     autocmd! InsertLeave
     autocmd InsertLeave * g:LeaveInsertMode()
-    g:UpdateStatus()
+    UpdateStatus()
 enddef
 command! SetupIM call g:SetupIM()
 
