@@ -49,7 +49,7 @@ enddef
 
 def g:SetupIM()
     set noshowmode
-    set iminsert=0
+    set imdisable
 python3 << EOF
 import vim
 
