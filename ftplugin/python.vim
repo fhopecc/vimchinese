@@ -6,7 +6,7 @@ from zhongwen.檔 import 取文檔位置
 import vim
 line = vim.eval("getline('.')")
 錯誤位置 = 取文檔位置(line)
-vim.command(f"e +{錯誤位置['列']} {錯誤位置['路徑']}")
+vim.command(f"e! +{錯誤位置['列']} {錯誤位置['路徑']}")
 EOS
 enddef
 
