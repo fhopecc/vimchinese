@@ -1,10 +1,38 @@
 vim9script
+py3 << EOS
+from zhongwen.python import 至
+EOS
+
+# 該行如有位置資訊，則至其表示之位置
+nnoremap gf <cmd>py3 至()<cr><c-w><c-o>
+
+# 切換至目前編輯檔之目錄
+command! Cwd exe 'cd '.expand("%:p:h")   
 
 command! -buffer ChangeWindow normal <c-w>w
 command! -buffer MaxWindow normal <c-w>o
 
+# 顯示游標物件說明
+def ShowDocument()
+    py3 << trim EOS
+import vim, jedi
+f = vim.eval("expand('%')")
+c = '\n'.join(vim.current.buffer)
+script = jedi.Script(code=c, path=f)
+_, l, c, *_ = map(lambda s: int(s), vim.eval('getcursorcharpos()'))
+try:
+    vim.vars['doclines']= '\n\n'.join([d.docstring() for d in script.goto(l, c, follow_imports=True)]).splitlines()
+except IndexError: None
+EOS
+    popup_atcursor(g:doclines, {
+                   title: 'Docstring',
+                   padding: [0, 1, 0, 1]
+                  })
+enddef  
+command! -buffer ShowDocument call ShowDocument()
+
 # 查詢名稱說明
-nnoremap <buffer> K <Cmd>py3 from zhongwen.python_dev import 說明;說明()<cr>
+nnoremap <buffer> K <Cmd>ShowDocument<cr>
 
 # 查找函數
 map <leader>c :set noimdisable<cr>:Leaderf function<cr>
