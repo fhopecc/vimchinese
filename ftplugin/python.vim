@@ -1,10 +1,16 @@
 vim9script
-py3 << EOS
-from zhongwen.python import 至
-EOS
 
-# 該行如有位置資訊，則至其表示之位置
-nnoremap gf <cmd>py3 至()<cr><c-w><c-o>
+def GotoFile()
+py3 << EOS
+from zhongwen.file import FileLocation
+import vim
+line = vim.eval("getline('.')")
+錯誤位置 = FileLocation(line)
+vim.command(f"e +{錯誤位置.列} {錯誤位置.路徑}")
+EOS
+enddef
+command! -buffer GotoFile call GotoFile()
+nnoremap gf <cmd> GotoFile<cr><c-w><c-o>
 
 # 切換至目前編輯檔之目錄
 command! Cwd exe 'cd '.expand("%:p:h")   
@@ -22,8 +28,8 @@ script = jedi.Script(code=c, path=f)
 _, l, c, *_ = map(lambda s: int(s), vim.eval('getcursorcharpos()'))
 try:
     vim.vars['doclines']= '\n\n'.join([d.docstring() for d in script.goto(l, c, follow_imports=True)]).splitlines()
-except IndexError: None
-except AttributeError: None
+except (IndexError, AttributeError) as e: 
+    vim.vars['doclines'] = []
 EOS
     popup_atcursor(g:doclines, {
                    title: 'Docstring',
