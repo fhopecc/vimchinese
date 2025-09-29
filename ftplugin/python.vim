@@ -23,6 +23,7 @@ _, l, c, *_ = map(lambda s: int(s), vim.eval('getcursorcharpos()'))
 try:
     vim.vars['doclines']= '\n\n'.join([d.docstring() for d in script.goto(l, c, follow_imports=True)]).splitlines()
 except IndexError: None
+except AttributeError: None
 EOS
     popup_atcursor(g:doclines, {
                    title: 'Docstring',
