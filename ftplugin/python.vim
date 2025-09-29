@@ -38,7 +38,7 @@ nnoremap <buffer> K <Cmd>ShowDocument<cr>
 map <leader>c :set noimdisable<cr>:Leaderf function<cr>
 
 # 至定義
-nnoremap <buffer> gd <Cmd>py3 from zhongwen.python_dev import 至定義;至定義()<CR>
+nnoremap <buffer> gd <Cmd>py3 from zhongwen.python import 至定義;至定義()<CR>
 
 # 執行編輯中腳本
 def ExecutePython()
@@ -51,7 +51,7 @@ map <buffer> <leader>e :ExecutePython<cr>
 
 # 測試編輯中腳本
 def TestPython()
-    py3 from zhongwen.python_dev import find_testfile
+    py3 from zhongwen.python import find_testfile
     w!
     var testfile = py3eval("find_testfile(r'" .. expand('%') .. "')")
     MaxWindow
@@ -89,7 +89,7 @@ def DeployPython()
     w!
 py3 << EOF
 import vim
-from zhongwen.python_dev import 布署
+from zhongwen.python import 布署
 from pathlib import Path
 布署(Path(vim.current.buffer.name))
 EOF
