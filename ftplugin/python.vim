@@ -21,7 +21,7 @@ c = '\n'.join(vim.current.buffer)
 script = jedi.Script(code=c, path=f)
 _, l, c, *_ = map(lambda s: int(s), vim.eval('getcursorcharpos()'))
 try:
-    r = script.goto(l, c, follow_imports=True)])[0]
+    r = script.goto(l, c, follow_imports=True)[0]
     p = r.module_path
     l = r.line
     c = r.column
