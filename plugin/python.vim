@@ -51,4 +51,32 @@ EOS
 enddef  
 command! ShowDocument call ShowDocument()
 
+# 執行編輯中腳本
+def ExecutePython()
+    w!
+    MaxWindow
+    term_start('py ' .. expand('%'))
+enddef
+command! ExecutePython call ExecutePython()
 
+# 測試編輯中腳本
+def TestPython()
+    py3 from zhongwen.python import find_testfile
+    w!
+    var testfile = py3eval("find_testfile(r'" .. expand('%') .. "')")
+    MaxWindow
+    call term_start('py ' .. testfile)
+enddef
+command! TestPython call TestPython()
+
+# 打包佈署
+def DeployPython()
+    w!
+py3 << EOF
+import vim
+from zhongwen.python import 布署
+from pathlib import Path
+布署(Path(vim.current.buffer.name))
+EOF
+enddef
+command! DeployPython call DeployPython()
