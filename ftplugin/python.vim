@@ -13,7 +13,7 @@ command! -buffer GotoFile call GotoFile()
 nnoremap gf <cmd> GotoFile<cr><c-w><c-o>
 
 # 至物件定義檔案
-def GotoDefine():
+def GotoDefineModule()
 py3 << EOS
 import vim, jedi
 f = vim.eval("expand('%')")
@@ -30,8 +30,8 @@ except (IndexError, AttributeError) as e:
     pass
 EOS
 enddef
-command! -buffer GotoDefine call GotoDefine()
-nnoremap <buffer> gd <cmd>GotoDefine<cr>
+command! -buffer GotoDefineModule call GotoDefineModule()
+nnoremap <buffer> gd <cmd>GotoDefineModule<cr>
 
 # 切換至目前編輯檔之目錄
 command! Cwd exe 'cd '.expand("%:p:h")   
