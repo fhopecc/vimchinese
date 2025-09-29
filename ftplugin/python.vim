@@ -9,9 +9,29 @@ line = vim.eval("getline('.')")
 vim.command(f"e! +{錯誤位置['列']} {錯誤位置['路徑']}")
 EOS
 enddef
-
 command! -buffer GotoFile call GotoFile()
 nnoremap gf <cmd> GotoFile<cr><c-w><c-o>
+
+# 至物件定義檔案
+def GotoDefine():
+py3 << EOS
+import vim, jedi
+f = vim.eval("expand('%')")
+c = '\n'.join(vim.current.buffer)
+script = jedi.Script(code=c, path=f)
+_, l, c, *_ = map(lambda s: int(s), vim.eval('getcursorcharpos()'))
+try:
+    r = script.goto(l, c, follow_imports=True)])[0]
+    p = r.module_path
+    l = r.line
+    c = r.column
+    vim.command(f"e +{l} {p}")
+except (IndexError, AttributeError) as e: 
+    pass
+EOS
+enddef
+command! -buffer GotoDefine call GotoDefine()
+nnoremap <buffer> gd <cmd>GotoDefine<cr>
 
 # 切換至目前編輯檔之目錄
 command! Cwd exe 'cd '.expand("%:p:h")   
@@ -44,9 +64,6 @@ nnoremap <buffer> K <Cmd>ShowDocument<cr>
 
 # 查找函數
 map <leader>c :set noimdisable<cr>:Leaderf function<cr>
-
-# 至定義
-nnoremap <buffer> gd <Cmd>py3 from zhongwen.python import 至定義;至定義()<CR>
 
 # 執行編輯中腳本
 def ExecutePython()
