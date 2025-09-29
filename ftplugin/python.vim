@@ -2,13 +2,14 @@ vim9script
 
 def GotoFile()
 py3 << EOS
-from zhongwen.file import FileLocation
+from zhongwen.檔 import 取文檔位置
 import vim
 line = vim.eval("getline('.')")
-錯誤位置 = FileLocation(line)
-vim.command(f"e +{錯誤位置.列} {錯誤位置.路徑}")
+錯誤位置 = 取文檔位置(line)
+vim.command(f"e +{錯誤位置['列']} {錯誤位置['路徑']}")
 EOS
 enddef
+
 command! -buffer GotoFile call GotoFile()
 nnoremap gf <cmd> GotoFile<cr><c-w><c-o>
 
