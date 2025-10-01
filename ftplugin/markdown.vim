@@ -1,12 +1,49 @@
 vim9script
-# 繼承純文字模式
-runtime! ftplugin/text.vim
-py3 from fhopecc.洄瀾打狗人札記 import 張貼
 
-#顯示目次
+set foldlevel=1 # 預設僅打開一層折疊 
+
+# <leader>e -> 網頁表達
+def ToHTML()
+    w!
+py3 << EOF
+from zhongwen.markdown import 網頁表達
+import vim
+file = vim.eval('expand("%:p")')
+網頁表達(file)
+EOF
+enddef
+map <buffer> <leader>e <cmd>call <sid>ToHTML()<cr>
+
+# <leader>P -> 公布至洄瀾打狗人網站
+def Post()
+    py3 << EOF
+from fhopecc.洄瀾打狗人札記 import 張貼
+from pathlib import Path
+import logging
+import vim
+file = vim.eval('expand("%:p")')
+logging.getLogger().setLevel(logging.ERROR)
+張貼(file)
+logging.getLogger().setLevel(logging.INFO)
+vim.command(f'echo "【{Path(file).stem}】已張貼至洄瀾打狗人。"')
+EOF
+enddef
+map <buffer> <leader>P <cmd>call <sid>Post()<cr>
+
+# :ToDOCX -> 轉成 docx 檔
+def ToDOCX()
+w!
+py3 << EOF
+from zhongwen.office_document import markdown2docx
+import vim
+file = vim.eval('expand("%:p")')
+markdown2docx(file)
+EOF
+enddef
+command -buffer ToDOCX call ToDOCX()
+
+# 顯示目次
 nmap <buffer> ;T :Toc<cr>
-
-# nmap >> 0i> <esc>
 
 g:vim_markdown_math = 1
 
@@ -24,45 +61,6 @@ EOF
     return g:_titles
 enddef
 command! -nargs=1 ListTitle call ListTitle(<f-args>)
-
-def ToHTML()
-    w!
-py3 << EOF
-from zhongwen.markdown import 網頁表達
-import vim
-file = vim.eval('expand("%:p")')
-網頁表達(file)
-EOF
-enddef
-command! ToHTML call ToHTML()
-map <buffer> <leader>e :ToHTML<CR>
-
-# 公布至洄瀾打狗人網站
-def Post()
-py3 << EOF
-import vim
-import logging
-from pathlib import Path
-file = vim.eval('expand("%:p")')
-logging.getLogger().setLevel(logging.ERROR)
-張貼(file)
-logging.getLogger().setLevel(logging.INFO)
-vim.command(f'echo "【{Path(file).stem}】已張貼至洄瀾打狗人。"')
-EOF
-enddef
-command! Post call Post()
-map <buffer> <leader>P :Post<CR>
-
-def ToDOCX()
-w!
-py3 << EOF
-from zhongwen.office_document import markdown2docx
-import vim
-file = vim.eval('expand("%:p")')
-markdown2docx(file)
-EOF
-enddef
-command! ToDOCX call ToDOCX()
 
 def g:IsInMath(): bool
     # 取得游標位置 (當前行、當前列) 上的語法 ID 堆疊
@@ -108,4 +106,3 @@ map <buffer> m0 <cmd>py3 import markdown;markdown.設定條列(0)<cr>
 map <buffer> m1 <cmd>py3 import markdown;markdown.設定條列(1)<cr>
 map <buffer> m2 <cmd>py3 import markdown;markdown.設定條列(2)<cr>
 map <buffer> m3 <cmd>py3 import markdown;markdown.設定條列(3)<cr>
-
