@@ -1,38 +1,7 @@
-py3 from chinese import *;設定首碼搜尋映射()
-py3 from zhongwen.text import 字元切換, 翻譯, 查萌典
-py3 from zhongwen.文 import geturl
+vim9script
 
-def! InstallYaHeiFont()
-    py3 安裝雅黑混合字型()
-enddef
-
-" 中文字型
-set guifont=Microsoft_YaHei_Mono:h16
-
-" f 搜尋擴充
-autocmd InsertEnter * set nohlsearch
-autocmd CursorHold * set nohlsearch
-hi Search guibg=Red 
-
-" ~ -> 字元切換
-def! chinese#switch_char()
-    var c = strcharpart(getline('.'), charcol('.') - 1, 1)
-    echom c
-    var sc = py3eval('字元切換("' .. c .. '")')
-    exec 'normal cl' .. sc
-enddef
-
-nmap ~ :call chinese#switch_char()<cr>
-
-" T -> 單詞翻譯
-command! YankLastMessages :let @1=execute('1messages')
-command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
-map T yiw:GTrans <c-r>"<cr>
-vmap T y:GTrans <c-r>"<cr>
-" K -> 中文字元查字義、英文單詞查中文譯詞、URL 開網頁。
-def! chinese#keyword()
-
-    # 1. [博物館法](https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0170101)
+" K -> 查中文字義、英詞中文譯詞、連結 URL 網頁。
+def GetWordDefine()
     var WORD = expand('<cWORD>') # 含特殊字元關鍵字
     var keyword = WORD
     WORD = substitute(WORD, '"', '', 'g')
@@ -66,6 +35,37 @@ def! chinese#keyword()
     echo "查詢單詞" .. keyword .. "完成！"
 enddef
 
+py3 from chinese import *;設定首碼搜尋映射()
+py3 from zhongwen.text import 字元切換, 翻譯, 查萌典
+py3 from zhongwen.文 import geturl
+
+def! InstallYaHeiFont()
+    py3 安裝雅黑混合字型()
+enddef
+
+" 中文字型
+set guifont=Microsoft_YaHei_Mono:h16
+
+" f 搜尋擴充
+autocmd InsertEnter * set nohlsearch
+autocmd CursorHold * set nohlsearch
+hi Search guibg=Red 
+
+" ~ -> 字元切換
+def! chinese#switch_char()
+    var c = strcharpart(getline('.'), charcol('.') - 1, 1)
+    echom c
+    var sc = py3eval('字元切換("' .. c .. '")')
+    exec 'normal cl' .. sc
+enddef
+
+nmap ~ :call chinese#switch_char()<cr>
+
+" T -> 單詞翻譯
+command! YankLastMessages :let @1=execute('1messages')
+command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
+map T yiw:GTrans <c-r>"<cr>
+vmap T y:GTrans <c-r>"<cr>
 " command! -nargs=+ Def :call chinese#query('<args>')
 nmap K :call chinese#keyword()<cr>
 
