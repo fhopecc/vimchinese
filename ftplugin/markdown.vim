@@ -1,6 +1,9 @@
 vim9script
 
-set foldlevel=1 # 預設僅打開一層折疊 
+# 顯示目次即折疊層級為 1
+setlocal foldlevel=1
+# <leader>o -> 顯示目次
+map <buffer> <leader>o <cmd>setlocal foldlevel=1<cr>
 
 # <leader>e -> 網頁表達
 def ToHTML()
@@ -42,9 +45,6 @@ EOF
 enddef
 command -buffer ToDOCX call ToDOCX()
 
-# 顯示目次
-nmap <buffer> ;T :Toc<cr>
-
 g:vim_markdown_math = 1
 
 # 臚列標題
@@ -62,8 +62,8 @@ EOF
 enddef
 command! -nargs=1 ListTitle call ListTitle(<f-args>)
 
-def g:IsInMath(): bool
-    # 取得游標位置 (當前行、當前列) 上的語法 ID 堆疊
+# 游標是否位於數學公式範圍
+def! g:IsInMath(): bool
     var ids: list<number> = synstack(line('.'), col('.'))
     var name: string     # <--- 變數改為 name (string 型別)
 
@@ -94,11 +94,7 @@ def ToPPT()
 enddef
 map <buffer> <leader>S :call markdown#2pptx()<CR>
 
-# 游標關鍵字檢索
-# nnoremap <buffer><expr> K ":G ".expand('<cword>')."<cr>"
-
 # markdown 指令
-# mn 新投影片
 # m1 插入條列一
 # m2 插入條列二
 # m3 插入條列三
