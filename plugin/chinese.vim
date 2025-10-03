@@ -1,5 +1,36 @@
 vim9script
 
+set nobackup # 不產製備份檔
+set noswapfile # 不創建臨時交換文件
+set nowritebackup # 编輯不需要備份文件
+set noundofile # 不創建撤銷文件
+set showtabline=0 # 不顯示分頁欄
+# 精簡介面
+set guioptions-=m 
+set guioptions-=T 
+set guioptions-=r 
+set shortmess+=c " 下方不顯示提示
+set encoding=utf8
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set backspace=indent,eol,start  " 插入模式倒退鍵能向後刪除
+colorscheme koehler
+filetype on 
+syntax enable
+
+# <leader>s -> 替換之後出現選取字串
+vmap <leader>s y:.,$s/<c-r>"/
+
+# <leader>y -> 複製選取字串至剪貼簿
+vmap <leader>y "*y
+
+# <leader>y -> 複製選取行至剪貼簿
+map <leader>y "*yy
+
+# <leader>p -> 貼上剪貼簿資料
+map <leader>p "*p
+
 # K -> 查中文字義、英詞中文譯詞、連結 URL 網頁。
 def GetWordDefine()
     var WORD = expand('<cWORD>') # 含特殊字元關鍵字
@@ -90,3 +121,15 @@ call popup_atcursor(@*, {})
 enddef
 command! -nargs=? QLLM <scriptcmd>QueryLLM(<q-args>)
 map ,z :QLLM<space>
+
+# 最大化視窗
+map <leader>o <c-w><c-o> 
+
+set foldlevelstart=99
+
+# 捲動另個視窗
+map <c-j> <c-w>w<c-e><c-w>w
+map <c-k> :call win_execute(win_getid(winnr('j')), "normal! \<C-Y>")<cr>
+map <leader>w <c-w>w
+
+
