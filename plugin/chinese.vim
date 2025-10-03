@@ -14,7 +14,7 @@ set encoding=utf8
 set expandtab
 set tabstop=4
 set shiftwidth=4
-set backspace=indent,eol,start  " 插入模式倒退鍵能向後刪除
+set backspace=indent,eol,start  # 插入模式倒退鍵能向後刪除
 colorscheme koehler
 filetype on 
 syntax enable
