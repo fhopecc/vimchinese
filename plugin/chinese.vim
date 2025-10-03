@@ -9,7 +9,7 @@ set showtabline=0 # 不顯示分頁欄
 set guioptions-=m 
 set guioptions-=T 
 set guioptions-=r 
-set shortmess+=c " 下方不顯示提示
+set shortmess+=c # 下方不顯示提示
 set encoding=utf8
 set expandtab
 set tabstop=4
