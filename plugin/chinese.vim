@@ -49,21 +49,12 @@ map ,g :Google<space>
 
 command! InstallYaHeiFont <cmd>py3 安裝雅黑混合字型()
 
-# 中文字型
-set guifont=Microsoft_YaHei_Mono:h16
-
 # f 搜尋擴充
 autocmd InsertEnter * set nohlsearch
 autocmd CursorHold * set nohlsearch
 hi Search guibg=Red 
 
-# ~ -> 字元切換
-def SwitchChar()
-    var c = strcharpart(getline('.'), charcol('.') - 1, 1)
-    echom c
-    var sc = py3eval('字元切換("' .. c .. '")')
-    exec 'normal cl' .. sc
-enddef
+# 字元切換
 nmap ~ <scriptcmd>SwitchChar()<cr>
 
 # T -> 單詞翻譯
@@ -115,6 +106,13 @@ map <leader>w <c-w>w
 
 ##### 命令函數定義 #####
 
+# ~ 字元切換
+def SwitchChar()
+    var c = strcharpart(getline('.'), charcol('.') - 1, 1)
+    echom c
+    var sc = py3eval('字元切換("' .. c .. '")')
+    exec 'normal cl' .. sc
+enddef
 
 # K -> 查中文字義、英詞中文譯詞、連結 URL 網頁。
 def GetWordDefine()
@@ -199,9 +197,8 @@ def BufferScrollFilter(winid: number, key: string): number
 enddef
 
 ##### 選項設定 #####
-
-# 隱藏 Buffer 不卸載，以保留狀態（包括折疊資訊）。
-set bufhidden=hide
+set bufhidden=hide # 隱藏 Buffer 時不卸載，以保留狀態(如折疊資訊)。
+set guifont=Microsoft_YaHei_Mono:h16 # 中文字型
 
 # 提升效能
 set nobackup # 不產製備份檔
@@ -220,6 +217,7 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 set backspace=indent,eol,start  # 插入模式倒退鍵能向後刪除
+
 colorscheme koehler
 filetype on 
 syntax enable

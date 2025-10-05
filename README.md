@@ -250,6 +250,12 @@ t[字] => 直到(till)下個字前
 
 其格式如「(一)標題甲；(二)標題乙；(三)標題丙」。
 
+## 參鍵 
+
+## 多鍵 
+
+### :%y<cr> -> 複製整個緩衝區
+
 # 參考書籍
 
 Learning Vim as a Language. Ben McCormick.
