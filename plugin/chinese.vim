@@ -8,6 +8,12 @@ py3 from zhongwen.文 import geturl
 ##### 命令定義 #####
 #====   單鍵   ====#
 
+# 查中文字義、英詞中文譯詞、連結 URL 網頁。
+nmap K <scriptcmd>GetWordDefine()<cr>
+
+# 字元切換
+nmap ~ <scriptcmd>SwitchChar()<cr>
+
 #====   雙鍵   ====#
 
 # 搜尋檔案
@@ -22,16 +28,8 @@ map <leader>b <cmd>Leaderf buffer --popup<cr>
 # 搜尋最近檔案
 map <leader>r <cmd>Leaderf mru --popup<cr>
 
-# Google 查詢游標關鍵字
-map <leader>G :Google <cword><cr>
-
-#====   參鍵   ====#
-
-# 替換之後出現選取字串
-vmap <leader>s y:.,$s/<c-r>"/
-
-# 複製選取字串至剪貼簿
-vmap <leader>y "*y
+# 最大化視窗
+map <leader>o <c-w><c-o> 
 
 # 複製選取行至剪貼簿
 map <leader>y "*yy
@@ -39,33 +37,27 @@ map <leader>y "*yy
 # 貼上剪貼簿資料
 map <leader>p "*p
 
-nmap K <scriptcmd>GetWordDefine()<cr>
+# Google 查詢游標關鍵字
+map <leader>G :Google <cword><cr>
+
+#====   參鍵   ====#
+
+#====   多鍵   ====#
+#
+# 替換之後出現選取字串
+vmap <leader>s y:.,$s/<c-r>"/
+
+# 複製選取字串至剪貼簿
+vmap <leader>y "*y
 
 vmap K y<cmd>Google <c-r>"<cr>
-
-# Google 關鍵字查詢
-command! -nargs=+ Google :!start "https://www.google.com/search?q=<args>"
-map ,g :Google<space>
-
-command! InstallYaHeiFont <cmd>py3 安裝雅黑混合字型()
-
-# f 搜尋擴充
-autocmd InsertEnter * set nohlsearch
-autocmd CursorHold * set nohlsearch
-hi Search guibg=Red 
-
-# 字元切換
-nmap ~ <scriptcmd>SwitchChar()<cr>
-
-# T -> 單詞翻譯
-command! YankLastMessages :let @1=execute('1messages')
-command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
-map T yiw:GTrans <c-r>"<cr>
-vmap T y:GTrans <c-r>"<cr>
-# command! -nargs=+ Def :call chinese#query('<args>')
-
 # / 擴充搜尋選取項目
 vnoremap / y/<c-r>"<cr>
+
+command! YankLastMessages :let @1=execute('1messages')
+command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
+vmap T y:GTrans <c-r>"<cr>
+# command! -nargs=+ Def :call chinese#query('<args>')
 
 # ,z -> 詢問谷歌雙子星模型
 def QueryLLM(question: string)
@@ -94,10 +86,8 @@ call popup_create(g:__chinese__response, opts)
 enddef
 command! -nargs=+ QLLM call <sid>QueryLLM(<q-args>)
 
-# 最大化視窗
-map <leader>o <c-w><c-o> 
-
-set foldlevelstart=99
+# Google 關鍵字查詢
+command! -nargs=+ Google :!start "https://www.google.com/search?q=<args>"
 
 # 捲動另個視窗
 map <c-j> <c-w>w<c-e><c-w>w
@@ -221,3 +211,8 @@ set backspace=indent,eol,start  # 插入模式倒退鍵能向後刪除
 colorscheme koehler
 filetype on 
 syntax enable
+
+# f 搜尋擴充
+autocmd InsertEnter * set nohlsearch
+autocmd CursorHold * set nohlsearch
+hi Search guibg=Red 
