@@ -30,6 +30,7 @@ def Complete(findstart: number, base: string): any
     endif
     py3 <<EOS
 from zhongwen.法規 import 取法規補全選項
+from zhongwen.檔 import 取檔名補全選項
 import vim
 import jedi
 suggest = []
@@ -38,6 +39,8 @@ cb = vim.current.buffer
 text = '\n'.join(cb)
 _a, lno, colno, _a, _a = map(lambda s: int(s), vim.eval('getcursorcharpos()'))
 suggest += 取法規補全選項(text, lno, colno)
+suggest += 取檔名補全選項(text, lno, colno)
+ 
 line = cb[lno-1] 
 colno = colno-1
 if vim.eval("&filetype") == 'python': 
