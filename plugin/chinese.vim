@@ -29,7 +29,7 @@ map <leader>b <cmd>Leaderf buffer --popup<cr>
 map <leader>r <cmd>Leaderf mru --popup<cr>
 
 # 最大化視窗
-map <leader>o <c-w><c-o> 
+map <leader>o <c-w><c-o><cr> 
 
 # 複製選取行至剪貼簿
 map <leader>y "*yy
