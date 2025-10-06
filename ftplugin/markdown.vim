@@ -101,9 +101,3 @@ map <buffer> m0 <cmd>py3 import markdown;markdown.設定條列(0)<cr>
 map <buffer> m1 <cmd>py3 import markdown;markdown.設定條列(1)<cr>
 map <buffer> m2 <cmd>py3 import markdown;markdown.設定條列(2)<cr>
 map <buffer> m3 <cmd>py3 import markdown;markdown.設定條列(3)<cr>
-
-# 讀檔顯示目次，即折疊層級為 1。
-if exists('b:has_read_buffer')
-    setlocal foldlevel=1
-endif
-b:has_read_buffer = 1 # 該緩衝區變數儲存是否讀檔進入緩衝區
