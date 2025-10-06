@@ -1,14 +1,13 @@
 vim9script
 
-# 顯示目次即折疊層級為 1
-setlocal foldlevel=1
-# <leader>o -> 顯示目次
-map <buffer> <leader>o <cmd>setlocal foldlevel=1<cr>
+# 顯示目次
+map <buffer> <leader>O <cmd>setlocal foldlevel=1<cr>
 
 # <leader>e -> 網頁表達
 def ToHTML()
     w!
 py3 << EOF
+
 from zhongwen.markdown import 網頁表達
 import vim
 file = vim.eval('expand("%:p")')
@@ -102,3 +101,8 @@ map <buffer> m0 <cmd>py3 import markdown;markdown.設定條列(0)<cr>
 map <buffer> m1 <cmd>py3 import markdown;markdown.設定條列(1)<cr>
 map <buffer> m2 <cmd>py3 import markdown;markdown.設定條列(2)<cr>
 map <buffer> m3 <cmd>py3 import markdown;markdown.設定條列(3)<cr>
+
+# 讀檔顯示目次，即折疊層級為 1。
+if exists('b:has_read_buffer'):
+    setlocal foldlevel=1
+b:has_read_buffer = 1
