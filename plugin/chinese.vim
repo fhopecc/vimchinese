@@ -10,6 +10,8 @@ py3 from zhongwen.文 import geturl
 
 # 查中文字義、英詞中文譯詞、連結 URL 網頁。
 nmap K <scriptcmd>GetWordDefine()<cr>
+# 選取字串查大語言模型
+vmap K y:Q <c-r>"<cr>
 
 # 字元切換
 nmap ~ <scriptcmd>SwitchChar()<cr>
@@ -50,7 +52,6 @@ vmap <leader>s y:.,$s/<c-r>"/
 # 複製選取字串至剪貼簿
 vmap <leader>y "*y
 
-vmap K y<cmd>Google <c-r>"<cr>
 # / 擴充搜尋選取項目
 vnoremap / y/<c-r>"<cr>
 
@@ -59,9 +60,10 @@ command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
 vmap T y:GTrans <c-r>"<cr>
 # command! -nargs=+ Def :call chinese#query('<args>')
 
-# :Q -> 詢問谷歌雙子星模型
+# 詢問谷歌雙子星模型
 def QueryLLM(question: string)
 b:question = question
+echom question
 python3 << EOF
 from zhongwen.智 import 詢問
 import vim
@@ -71,7 +73,6 @@ vim.vars['__chinese__response'] = r.splitlines()
 EOF
 @* = join(g:__chinese__response, "\n")
 popup_clear(1)
-
 var opts: dict<any> = {
     'title': '可捲動範例 (Ctrl-J/K 捲動, q 關閉)',
     'line': 5,            # 視窗起始行
@@ -81,7 +82,6 @@ var opts: dict<any> = {
     'filter': funcref('BufferScrollFilter'),
     'scrollbar': v:true
 }
-
 call popup_create(g:__chinese__response, opts)
 enddef
 command! -nargs=+ Q call <sid>QueryLLM(<q-args>)
