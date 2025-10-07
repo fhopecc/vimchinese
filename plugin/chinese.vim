@@ -59,7 +59,7 @@ command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
 vmap T y:GTrans <c-r>"<cr>
 # command! -nargs=+ Def :call chinese#query('<args>')
 
-# ,z -> 詢問谷歌雙子星模型
+# :Q -> 詢問谷歌雙子星模型
 def QueryLLM(question: string)
 b:question = question
 python3 << EOF
@@ -84,9 +84,9 @@ var opts: dict<any> = {
 
 call popup_create(g:__chinese__response, opts)
 enddef
-command! -nargs=+ QLLM call <sid>QueryLLM(<q-args>)
+command! -nargs=+ Q call <sid>QueryLLM(<q-args>)
 
-# Google 關鍵字查詢
+# :G -> 關鍵字查詢
 command! -nargs=+ Google :!start "https://www.google.com/search?q=<args>"
 
 # 捲動另個視窗

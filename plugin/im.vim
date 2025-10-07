@@ -206,6 +206,6 @@ def ShowInputPopup()
     endif
     # matchadd('InputLine', '\%1l', -1, g:input_popup)
 enddef
-if !g:disableim
+if exists('g:enableim')
     SetupIM
 endif
