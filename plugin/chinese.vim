@@ -2,7 +2,7 @@ vim9script
 ##### 載入 python 模組 #####
 
 py3 from chinese import *;設定首碼搜尋映射()
-py3 from zhongwen.text import 字元切換, 翻譯, 查萌典
+py3 from zhongwen.text import 字元切換, 翻譯
 py3 from zhongwen.文 import geturl
 
 ##### 命令定義 #####
@@ -60,16 +60,19 @@ command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
 vmap T y:GTrans <c-r>"<cr>
 # command! -nargs=+ Def :call chinese#query('<args>')
 
-# 詢問谷歌雙子星模型
+# 單字問萌典，單字以上詢問谷歌雙子星模型
 def QueryLLM(question: string)
 b:question = question
-echom question
 python3 << EOF
+from zhongwen.文 import 查萌典
 from zhongwen.智 import 詢問
 import vim
 問題 = vim.eval("b:question")
-r = 詢問(問題, 不輸出回答=True)
-vim.vars['__chinese__response'] = r.splitlines()
+if len(問題)==1:
+    rs = 查萌典(問題)
+else:
+    rs = 詢問(問題, 不輸出回答=True).splitlines()
+vim.vars['__chinese__response'] = rs
 EOF
 @* = join(g:__chinese__response, "\n")
 popup_clear(1)
