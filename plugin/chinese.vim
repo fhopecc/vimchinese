@@ -232,6 +232,7 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 set backspace=indent,eol,start  # 插入模式倒退鍵能向後刪除
+set ruler
 
 colorscheme koehler
 filetype on 
