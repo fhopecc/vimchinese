@@ -1,9 +1,6 @@
 vim9script
 ##### 載入 python 模組 #####
-
-py3 from chinese import *;設定首碼搜尋映射()
-py3 from zhongwen.text import 字元切換, 翻譯
-py3 from zhongwen.文 import geturl
+py3 from zhongwen.文 import geturl, 翻譯
 
 ##### 命令定義 #####
 #====   單鍵   ====#
@@ -101,6 +98,7 @@ map <leader>w <c-w>w
 
 # ~ 字元切換
 def SwitchChar()
+    py3 from zhongwen.文 import 字元切換
     var c = strcharpart(getline('.'), charcol('.') - 1, 1)
     echom c
     var sc = py3eval('字元切換("' .. c .. '")')
@@ -189,6 +187,30 @@ def BufferScrollFilter(winid: number, key: string): number
     return 0
 enddef
 
+def ExpandFCommand()
+    py3 <<EOS
+import vim, string
+def 首碼搜尋命令(char):
+    from zhongwen.文 import 首碼搜尋表示式
+    import vim
+    return 首碼搜尋表示式(char, ''.join(vim.current.buffer))
+
+'語義與原本 fx 相同'
+def cmdstr(mapmode, direction, char):
+    f = 'f' if direction == "/" else "F"
+    d = direction
+    if mapmode == 'normal':
+        return f'nn <expr> {f}{c} "{d}" .. py3eval("首碼搜尋命令(\'{c}\')") .. "<CR>:set hls<CR>"'
+    if mapmode == 'operator-pending':
+        return f'ono <expr> {f}{c} "{d}" .. py3eval("首碼搜尋命令(\'{c}\')") .. "\\\\@<=.<CR>:set hls<CR>"'
+for c in string.ascii_lowercase:
+    vim.command(cmdstr('normal', "/", c))
+    vim.command(cmdstr('operator-pending', "/", c))
+    vim.command(cmdstr('normal', "?", c))
+    vim.command(cmdstr('operator-pending', "?", c))
+EOS
+enddef
+
 ##### 選項設定 #####
 set bufhidden=hide # 隱藏 Buffer 時不卸載，以保留狀態(如折疊資訊)。
 set guifont=Microsoft_YaHei_Mono:h16 # 中文字型
@@ -219,3 +241,5 @@ syntax enable
 autocmd InsertEnter * set nohlsearch
 autocmd CursorHold * set nohlsearch
 hi Search guibg=Red 
+
+ExpandFCommand()
