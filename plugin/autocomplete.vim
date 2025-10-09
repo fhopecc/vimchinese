@@ -43,13 +43,11 @@ suggest = []
 if vim.eval("&filetype") == 'python': 
     code = text
     script = jedi.Script(code, path=file)
-    suggest += [{'word':c.complete, 'abbr':c.name, 'kind':c.type} for c in script.complete(lno, colno)]
+    suggest += [{'word':c.complete, 'abbr':c.name, 'kind':c.type} for c in script.complete(lno, colno-1)]
 suggest += 取法規補全選項(text, lno, colno)
 suggest += 取簡稱補全選項(text, lno, colno)
 suggest += 取詞補全選項(text, lno, colno)
 suggest += 取檔名補全選項(text, lno, colno)
-line = cb[lno-1] 
-colno = colno-1
 EOS
     return {'words': py3eval("suggest"), 'refresh': 'always'}
 enddef
