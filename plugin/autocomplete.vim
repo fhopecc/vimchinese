@@ -1,6 +1,8 @@
 vim9script
+
 # 自動補全
 inoremap <expr> <tab> SmartTabComplete()
+
 # 選擇上個補全項目
 inoremap <expr> <s-Tab> pumvisible() ? '<C-P>' : "\<S-Tab>"
 
@@ -23,27 +25,30 @@ def SmartTabComplete(): string
 
     return "\<c-x>\<c-u>"
 enddef
+
+# 補全函數
 def Complete(findstart: number, base: string): any
 
     if findstart
         return col('.')
     endif
+
     py3 <<EOS
+from zhongwen.文 import 取簡稱補全選項, 取詞補全選項
 from zhongwen.法規 import 取法規補全選項
 from zhongwen.檔 import 取檔名補全選項
-from zhongwen.文 import 取簡稱補全選項, 取詞補全選項
 import vim
 import jedi
 file = vim.eval("expand('%')")
 cb = vim.current.buffer
 text = '\n'.join(cb)
 _a, lno, colno, _a, _a = map(lambda s: int(s), vim.eval('getcursorcharpos()'))
-
+colno -= 1 # 插入模式游標欄數係插入新字元之位置，即游標之前字元數加1。
 suggest = []
 if vim.eval("&filetype") == 'python': 
     code = text
     script = jedi.Script(code, path=file)
-    suggest += [{'word':c.complete, 'abbr':c.name, 'kind':c.type} for c in script.complete(lno, colno-1)]
+    suggest += [{'word':c.complete, 'abbr':c.name, 'kind':c.type} for c in script.complete(lno, colno)]
 suggest += 取法規補全選項(text, lno, colno)
 suggest += 取簡稱補全選項(text, lno, colno)
 suggest += 取詞補全選項(text, lno, colno)
@@ -51,4 +56,7 @@ suggest += 取檔名補全選項(text, lno, colno)
 EOS
     return {'words': py3eval("suggest"), 'refresh': 'always'}
 enddef
+
 set completefunc=Complete
+
+set completeopt-=preview
