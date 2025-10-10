@@ -1,7 +1,7 @@
 vim9script
 
 # 顯示目次
-map <buffer> <leader>O <cmd>setlocal foldlevel=1<cr>
+map <buffer> <leader>O <cmd>setlocal foldlevel=2<cr>
 
 # <leader>e -> 網頁表達
 def ToHTML()
