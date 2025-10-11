@@ -73,12 +73,11 @@ EOF
 @* = join(g:__chinese__response, "\n")
 popup_clear(1)
 var opts: dict<any> = {
-    'title': '可捲動範例 (Ctrl-J/K 捲動, q 關閉)',
-    'line': 5,            # 視窗起始行
-    'col': 10,            # 視窗起始欄
+    'title': 'ctrl-j/k 捲動上/下，ctrl-q 關閉',
+    'line': 5,
+    'col': 10,
     'padding': [1, 1, 0, 1],
     'border': [],
-    'filter': funcref('BufferScrollFilter'),
     'scrollbar': v:true
 }
 call popup_create(g:__chinese__response, opts)
@@ -164,24 +163,6 @@ def CopyMessageHistory(count: number = 10)
     call setreg('+', join(last_n_messages, "\n"))
 enddef
 command! CopyMessages call <sid>CopyMessageHistory()
-
-def BufferScrollFilter(winid: number, key: string): number
-    # 判斷按鍵類型
-    if key ==# "\<C-j>"  # Ctrl + J: 向下捲動
-        # 使用 feedkeys 模擬 Normal 模式的向下捲動 (Ctrl-E)
-        # 'n' 模式確保按鍵作用於 Normal 模式，而 't' 模式則立即執行。
-        feedkeys("\<C-e>", 'nt')
-        return 1 # 傳回 1 表示按鍵已被處理
-    elseif key ==# "\<C-k>"  # Ctrl + K: 向上捲動
-        # 使用 feedkeys 模擬 Normal 模式的向上捲動 (Ctrl-Y)
-        feedkeys("\<C-y>", 'nt')
-        return 1 # 傳回 1 表示按鍵已被處理
-    elseif key ==# "q" # 按 Q 關閉視窗
-        popup_close(winid)
-        return 1
-    endif
-    return 0
-enddef
 
 def ExpandFCommand()
     py3 <<EOS

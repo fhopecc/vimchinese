@@ -2,6 +2,7 @@ vim9script
 
 map <c-j> <scriptcmd>SmartScrollDown<cr>
 map <c-k> <scriptcmd>SmartScrollUp<cr>
+map <c-q> <scriptcmd>ClosePopup<cr>
 
 # 向下捲動最新彈窗，如無捲動編輯視窗
 def SmartScrollDown() 
@@ -24,6 +25,15 @@ def SmartScrollUp()
     endif
 enddef
 command! SmartScrollUp :call SmartScrollUp()
+
+# 關閉最新彈窗
+def ClosePopup() 
+    var last_popup_id: number = GetLastPopupId()
+    if GetLastPopupId() != 0
+        popup_close(last_popup_id)
+    endif
+enddef
+command! ClosePopup :call ClosePopup()
 
 # 取最新彈窗識別碼，無者為零
 def GetLastPopupId(): number
