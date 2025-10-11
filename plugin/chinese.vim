@@ -89,9 +89,6 @@ command! -nargs=+ Q call <sid>QueryLLM(<q-args>)
 # :G -> 關鍵字查詢
 command! -nargs=+ Google :!start "https://www.google.com/search?q=<args>"
 
-# 捲動另個視窗
-map <c-j> <c-w>w<c-e><c-w>w
-map <c-k> :call win_execute(win_getid(winnr('j')), "normal! \<C-Y>")<cr>
 map <leader>w <c-w>w
 
 ##### 命令函數定義 #####
