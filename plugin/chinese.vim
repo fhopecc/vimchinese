@@ -74,13 +74,8 @@ EOF
 popup_clear(1)
 var opts: dict<any> = {
     'title': 'ctrl-j/k 捲動上/下，ctrl-q 關閉',
-    'line': 5,
-    'col': 10,
-    'padding': [1, 1, 0, 1],
-    'border': [],
-    'scrollbar': v:true
 }
-call popup_create(g:__chinese__response, opts)
+call popup_dialog(g:__chinese__response, opts)
 enddef
 command! -nargs=+ Q call <sid>QueryLLM(<q-args>)
 
