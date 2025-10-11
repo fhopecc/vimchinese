@@ -1,6 +1,5 @@
 vim9script
 ##### 載入 python 模組 #####
-py3 from zhongwen.文 import geturl, 翻譯
 
 ##### 命令定義 #####
 #====   單鍵   ====#
@@ -104,6 +103,7 @@ enddef
 
 # K -> 查中文字義、英詞中文譯詞、連結 URL 網頁。
 def GetWordDefine()
+    py3 from zhongwen.文 import geturl, 翻譯, 查萌典
     var WORD = expand('<cWORD>') # 含特殊字元關鍵字
     var keyword = WORD
     WORD = substitute(WORD, '"', '', 'g')
@@ -134,7 +134,6 @@ def GetWordDefine()
         res = join(res, "\n")
     endif
     @+ = res
-    echo "查詢單詞" .. keyword .. "完成！"
 enddef
 
 def CopyMessageHistory(count: number = 10)
