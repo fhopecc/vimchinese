@@ -71,7 +71,6 @@ def ExecutePython()
     catch
         var errmsg = '執行' .. expand('%') .. "失敗，主要係發生" .. v:exception
         popup_notification(errmsg, {})       
-
     endtry
 enddef
 command! ExecutePython call ExecutePython()
@@ -82,7 +81,7 @@ enddef
 
 def OutCallback(channel: channel, msg: string)
     g:popup_beval->popup_settext(msg)
-    echom msg
+    g:out->add(msg)
 enddef
 
 def ExecutePythonCallback(jog: job, status: number)
