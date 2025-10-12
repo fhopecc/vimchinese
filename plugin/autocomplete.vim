@@ -28,7 +28,6 @@ enddef
 
 # 補全函數
 def Complete(findstart: number, base: string): any
-
     if findstart
         return col('.')
     endif
@@ -49,6 +48,13 @@ if vim.eval("&filetype") == 'python':
     code = text
     script = jedi.Script(code, path=file)
     suggest += [{'word':c.complete, 'abbr':c.name, 'kind':c.type} for c in script.complete(lno, colno)]
+if vim.eval("&filetype") == 'vim': 
+    cword = vim.eval("expand('<cword>')")
+    completiontype = vim.eval("getcompletiontype(getline('.'))")
+    suggests = vim.eval("getcompletion(expand('<cword>'), getcompletiontype(getline('.')))")
+    if suggests: 
+        suggests += [{'word':s[len(cword):], 'abbr':s, 'kind':completiontype} for s in suggests]
+
 suggest += 取法規補全選項(text, lno, colno)
 suggest += 取簡稱補全選項(text, lno, colno)
 suggest += 取詞補全選項(text, lno, colno)
@@ -56,7 +62,6 @@ suggest += 取檔名補全選項(text, lno, colno)
 EOS
     return {'words': py3eval("suggest"), 'refresh': 'always'}
 enddef
-
 set completefunc=Complete
 
 set completeopt-=preview

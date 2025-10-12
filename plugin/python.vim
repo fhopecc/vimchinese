@@ -1,7 +1,5 @@
 vim9script
-
-map <leader>e <scriptcmd>ExecutePython<cr>
-map <leader>T <scriptcmd>TestPython<cr>
+### Python 檔案編輯相關函數及命令 ###
 
 # 至檔案
 def GotoFile()
