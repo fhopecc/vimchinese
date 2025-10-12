@@ -103,6 +103,7 @@ def TestPython()
         var testfile = py3eval("find_testfile(r'" .. expand('%') .. "')")
         var command_list = ['py', '-u', testfile]
         var job_options = {
+            'out_cb': funcref('OutCallback'),
             'err_cb': funcref('ErrCallback'),
             'exit_cb': funcref('ExecutePythonCallback')
         }
