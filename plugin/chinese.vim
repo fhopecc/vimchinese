@@ -15,11 +15,11 @@ nmap ~ <scriptcmd>SwitchChar()<cr>
 # 搜尋檔案
 map <leader>f <cmd>Leaderf file --popup .<cr>
 
-# 搜尋函數、變數等標記
-map <leader>t <cmd>Leaderf bufTag --popup<cr>
-
 # 搜尋緩衝
 map <leader>b <cmd>Leaderf buffer --popup<cr>
+
+# 查找標記
+map <leader>c <cmd>Leaderf bufTag --popup<cr>
 
 # 搜尋最近檔案
 map <leader>r <cmd>Leaderf mru --popup<cr>

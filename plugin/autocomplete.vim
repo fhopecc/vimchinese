@@ -49,11 +49,14 @@ if vim.eval("&filetype") == 'python':
 if vim.eval("&filetype") == 'vim': 
     cl = vim.eval("getline('.')")
     completiontype = vim.eval("getcompletiontype(getline('.'))")
-    cword = 取最近詞首(cl, colno) 
-    cmd = f"getcompletion('{cword}', '{completiontype}')"
-    vimcomp = vim.eval(cmd)
-    if vimcomp: 
-        suggest += [{'word':s[len(cword):], 'abbr':s, 'kind':completiontype} for s in vimcomp]
+    if completiontype:
+        cword = 取最近詞首(cl, colno) 
+        vim.command(f"echom 'cword = {cword}'")
+        cmd = f"getcompletion('{cword}', '{completiontype}')"
+        vim.command(f"echom \"cmd = {cmd}\"")
+        vimcomp = vim.eval(cmd)
+        if vimcomp: 
+            suggest += [{'word':s[len(cword):], 'abbr':s, 'kind':completiontype} for s in vimcomp]
 suggest += 取法規補全選項(text, lno, colno)
 suggest += 取簡稱補全選項(text, lno, colno)
 suggest += 取詞補全選項(text, lno, colno)

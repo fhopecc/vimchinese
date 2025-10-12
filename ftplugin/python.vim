@@ -1,8 +1,13 @@
 vim9script
 ## Python 檔案編輯按鍵定義 ##
 
+## 單鍵 ##
+
+## 雙鍵 ##
+
 map <buffer> <leader>e <cmd>ExecutePython<cr>
-map <buffer> <leader>t :TestPython<cr>
+map <buffer> <leader>t <cmd>TestPython<cr>
+
 
 nnoremap gf <cmd>GotoFile<cr><c-w><c-o>
 nnoremap <buffer> gd <cmd>GotoDefineFile<cr>
@@ -16,8 +21,6 @@ command! Cwd exe 'cd '.expand("%:p:h")
 command! -buffer ChangeWindow normal <c-w>w
 command! -buffer MaxWindow normal <c-w>o
 
-# 查找函數
-map <leader>c :set noimdisable<cr>:Leaderf function<cr>
 
 # 效能
 def ProfilePython()
