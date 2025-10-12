@@ -1,6 +1,4 @@
 vim9script
-##### 載入 python 模組 #####
-
 ##### 命令定義 #####
 #====   單鍵   ====#
 
@@ -25,6 +23,9 @@ map <leader>b <cmd>Leaderf buffer --popup<cr>
 
 # 搜尋最近檔案
 map <leader>r <cmd>Leaderf mru --popup<cr>
+
+# 搜尋錯誤位置
+map <leader>q <cmd>Leaderf quickfix  --popup<cr>
 
 # 最大化視窗
 map <leader>o <c-w><c-o><cr> 
@@ -73,7 +74,7 @@ EOF
 @* = join(g:__chinese__response, "\n")
 popup_clear(1)
 var opts: dict<any> = {
-    'title': 'ctrl-j/k 捲動上/下，ctrl-q 關閉',
+    'title': 'ctrl-j/k 捲動上/下，ctrl-q 關閉'
 }
 call popup_create(g:__chinese__response, opts)
 enddef

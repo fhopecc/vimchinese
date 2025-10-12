@@ -1,8 +1,11 @@
 vim9script
 
+map <leader>e <scriptcmd>ExecutePython<cr>
+map <leader>t <scriptcmd>TestPython<cr>
+
 # 至檔案
 def GotoFile()
-py3 << EOS
+    py3 << EOS
 from zhongwen.檔 import 取文檔位置
 import vim
 line = vim.eval("getline('.')")
@@ -53,19 +56,51 @@ command! ShowDocument call ShowDocument()
 
 # 執行編輯中腳本
 def ExecutePython()
-    w!
-    MaxWindow
-    term_start('py ' .. expand('%'))
+    try
+        w!
+        var command_list = ['py', '-u', expand('%')]
+        var job_options = {
+            'err_cb': funcref('ErrCallback'),
+            'exit_cb': funcref('ExecutePythonCallback')
+        }
+        b:errmsg = []
+        var job = job_start(command_list, job_options)
+    catch
+        popup_notification('執行' .. expand('%') .. "失敗，主要係發生" .. v:exception, {})       
+    endtry
 enddef
 command! ExecutePython call ExecutePython()
 
+def ErrCallback(channel: channel, msg: string)
+    b:errmsg = add(b:errmsg, msg)
+enddef
+
+def ExecutePythonCallback(job: job, status: number)
+    py3 << EOS 
+from zhongwen.python import 取錯誤位置清單
+import vim
+qf = 取錯誤位置清單(vim.eval('b:errmsg')) 
+EOS
+    setqflist(py3eval('qf'))
+    Leaderf quickfix --popup 
+enddef
+
 # 測試編輯中腳本
 def TestPython()
-    py3 from zhongwen.python import find_testfile
-    w!
-    var testfile = py3eval("find_testfile(r'" .. expand('%') .. "')")
-    MaxWindow
-    call term_start('py ' .. testfile)
+    try
+        w!
+        py3 from zhongwen.python import find_testfile
+        var testfile = py3eval("find_testfile(r'" .. expand('%') .. "')")
+        var command_list = ['py', '-u', testfile]
+        var job_options = {
+            'err_cb': funcref('ErrCallback'),
+            'exit_cb': funcref('ExecutePythonCallback')
+        }
+        b:errmsg = []
+        var job = job_start(command_list, job_options)
+    catch
+        popup_notification('測試' .. expand('%') .. "失敗，主要係發生" .. v:exception, {})       
+    endtry
 enddef
 command! TestPython call TestPython()
 

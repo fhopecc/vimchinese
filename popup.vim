@@ -47,12 +47,12 @@ def GetLastPopupId(): number
     return last_winid
 enddef
 # test code
-# popup_clear()
-# var line = 'line'
-# var lines = []
-# for i in range(80)
-#     lines->add(string(i) .. line)
-# endfor
-# var winid = popup_dialog(lines, {})
-# echom winid
+popup_clear()
+var line = 'line'
+var lines = []
+for i in range(80)
+    lines->add(string(i) .. line)
+endfor
+var winid = popup_create(lines, {})
+echom winid
 # popup_clear()
