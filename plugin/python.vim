@@ -63,8 +63,9 @@ def ExecutePython()
             'err_cb': funcref('ErrCallback'),
             'exit_cb': funcref('ExecutePythonCallback')
         }
-        b:errmsg = []
+        g:errmsg = []
         var job = job_start(command_list, job_options)
+        g:popup_beval = popup_beval('執行' .. expand('%'), {})
     catch
         popup_notification('執行' .. expand('%') .. "失敗，主要係發生" .. v:exception, {})       
     endtry
@@ -72,15 +73,16 @@ enddef
 command! ExecutePython call ExecutePython()
 
 def ErrCallback(channel: channel, msg: string)
-    b:errmsg = add(b:errmsg, msg)
+    g:errmsg = add(g:errmsg, msg)
 enddef
 
-def ExecutePythonCallback(job: job, status: number)
+def ExecutePythonCallback(jog: job, status: number)
     py3 << EOS 
 from zhongwen.python import 取錯誤位置清單
 import vim
-qf = 取錯誤位置清單(vim.eval('b:errmsg')) 
+qf = 取錯誤位置清單(vim.eval('g:errmsg')) 
 EOS
+    popup_close(g:popup_beval) 
     setqflist(py3eval('qf'))
     Leaderf quickfix --popup 
 enddef
@@ -96,8 +98,9 @@ def TestPython()
             'err_cb': funcref('ErrCallback'),
             'exit_cb': funcref('ExecutePythonCallback')
         }
-        b:errmsg = []
+        g:errmsg = []
         var job = job_start(command_list, job_options)
+        g:popup_beval = popup_beval('測試' .. expand('%'), {})
     catch
         popup_notification('測試' .. expand('%') .. "失敗，主要係發生" .. v:exception, {})       
     endtry
