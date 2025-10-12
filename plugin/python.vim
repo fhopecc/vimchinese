@@ -24,32 +24,24 @@ command! ExecutePython call ExecutePython()
 
 def ExecutePythonCallback(job: job, status: number)
     var outbuf = job->ch_getbufnr('out')
-    const ls = outbuf->getbufline(1, '$')
-    var decoded_ls = []
+    var errbuf = job->ch_getbufnr('err')
+    const ls = outbuf->getbufline(1, '$') + errbuf->getbufline(1, '$')
+    g:outall = []
     for l in ls
         const decoded_l = iconv(l, 'cp950', 'utf-8')
-        decoded_ls->add(decoded_l)
+        g:outall->add(decoded_l)
     endfor
-
-    var errbuf = job->ch_getbufnr('err')
-    const els = errbuf->getbufline(1, '$')
-    g:errs = []
-    for l in els
-        const decoded_el = iconv(l, 'cp950', 'utf-8')
-        g:errs->add(decoded_el)
-    endfor
-    var outall = decoded_ls + g:errs
     setbufline(outbuf, 1, [])
-    setbufline(outbuf, 1, outall)
+    setbufline(outbuf, 1, g:outall)
     execute 'sbuf ' .. string(outbuf)
 
     py3 << EOS 
 from zhongwen.python import 取錯誤位置清單
 import vim
-qf = 取錯誤位置清單(vim.eval('g:errs')) 
+qf = 取錯誤位置清單(vim.eval('g:outall')) 
 EOS
     g:popup_beval->popup_close() 
-    setqflist(py3eval('qf'))
+    setqflist(py3eval('qf'), 'r')
     Leaderf quickfix --popup 
 enddef
 
@@ -62,9 +54,7 @@ def TestPython()
         var command_list = ['py', '-u', testfile]
         var job_options = {
             'out_io': 'buffer',
-            'out_name': 'out',
             'err_io': 'buffer', 
-            'err_name': 'err',
             'exit_cb': funcref('ExecutePythonCallback')
         }
         var job = job_start(command_list, job_options)
