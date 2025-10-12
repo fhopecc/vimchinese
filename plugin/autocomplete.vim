@@ -1,5 +1,4 @@
 vim9script
-
 # 自動補全
 inoremap <expr> <tab> SmartTabComplete()
 
@@ -25,7 +24,6 @@ def SmartTabComplete(): string
 
     return "\<c-x>\<c-u>"
 enddef
-
 # 補全函數
 def Complete(findstart: number, base: string): any
     if findstart
@@ -33,7 +31,7 @@ def Complete(findstart: number, base: string): any
     endif
 
     py3 <<EOS
-from zhongwen.文 import 取簡稱補全選項, 取詞補全選項
+from zhongwen.文 import 取簡稱補全選項, 取詞補全選項, 取最近詞首
 from zhongwen.法規 import 取法規補全選項
 from zhongwen.檔 import 取檔名補全選項
 import vim
@@ -49,12 +47,13 @@ if vim.eval("&filetype") == 'python':
     script = jedi.Script(code, path=file)
     suggest += [{'word':c.complete, 'abbr':c.name, 'kind':c.type} for c in script.complete(lno, colno)]
 if vim.eval("&filetype") == 'vim': 
-    cword = vim.eval("expand('<cword>')")
+    cl = vim.eval("getline('.')")
     completiontype = vim.eval("getcompletiontype(getline('.'))")
-    suggests = vim.eval("getcompletion(expand('<cword>'), getcompletiontype(getline('.')))")
-    if suggests: 
-        suggests += [{'word':s[len(cword):], 'abbr':s, 'kind':completiontype} for s in suggests]
-
+    cword = 取最近詞首(cl, colno) 
+    cmd = f"getcompletion('{cword}', '{completiontype}')"
+    vimcomp = vim.eval(cmd)
+    if vimcomp: 
+        suggest += [{'word':s[len(cword):], 'abbr':s, 'kind':completiontype} for s in vimcomp]
 suggest += 取法規補全選項(text, lno, colno)
 suggest += 取簡稱補全選項(text, lno, colno)
 suggest += 取詞補全選項(text, lno, colno)
@@ -63,5 +62,4 @@ EOS
     return {'words': py3eval("suggest"), 'refresh': 'always'}
 enddef
 set completefunc=Complete
-
 set completeopt-=preview
