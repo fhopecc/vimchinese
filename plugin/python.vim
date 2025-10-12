@@ -58,10 +58,10 @@ command! ShowDocument call ShowDocument()
 def ExecutePython()
     try
         w!
-        var command_list = ['py', '-u', expand('%')]
+        va command_list = ['py', '-u', expand('%')]
         var job_options = {
-            'out_cb': funcref('OutCallback'),
-            'err_cb': funcref('ErrCallback'),
+            'out_io': 'buffer',
+            'err_io': 'buffer', 
             'exit_cb': funcref('ExecutePythonCallback')
         }
         g:errmsg = []
@@ -75,20 +75,32 @@ def ExecutePython()
 enddef
 command! ExecutePython call ExecutePython()
 
-def ErrCallback(channel: channel, msg: string)
-    g:errmsg->add(msg)
-enddef
+def ExecutePythonCallback(job: job, status: number)
+    var outbuf = job->ch_getbufnr('out')
+    const ls = outbuf->getbufline(1, '$')
+    var decoded_ls = []
+    for l in ls
+        const decoded_l = iconv(l, 'cp950', 'utf-8')
+        decoded_ls->add(decoded_l)
+    endfor
+    setbufline(outbuf, 1, [])
+    setbufline(outbuf, 1, decoded_ls)
+    execute 'sbuf ' .. string(outbuf)
 
-def OutCallback(channel: channel, msg: string)
-    g:popup_beval->popup_settext(msg)
-    g:out->add(msg)
-enddef
-
-def ExecutePythonCallback(jog: job, status: number)
+    var errbuf = job->ch_getbufnr('err')
+    const els = errbuf->getbufline(1, '$')
+    g:errs = []
+    for l in els
+        const decoded_el = iconv(l, 'cp950', 'utf-8')
+        g:errs->add(decoded_el)
+    endfor
+    setbufline(errbuf, 1, [])
+    setbufline(errbuf, 1, g:errs)
+ 
     py3 << EOS 
 from zhongwen.python import 取錯誤位置清單
 import vim
-qf = 取錯誤位置清單(vim.eval('g:errmsg')) 
+qf = 取錯誤位置清單(vim.eval('g:decoded_els')) 
 EOS
     g:popup_beval->popup_close() 
     setqflist(py3eval('qf'))
@@ -103,8 +115,12 @@ def TestPython()
         var testfile = py3eval("find_testfile(r'" .. expand('%') .. "')")
         var command_list = ['py', '-u', testfile]
         var job_options = {
-            'out_cb': funcref('OutCallback'),
-            'err_cb': funcref('ErrCallback'),
+            'out_io': 'buffer',
+            'out_name': 'out',
+            'err_io': 'buffer', 
+            'err_name': 'err',
+            # 'out_cb': funcref('OutCallback'),
+            # 'err_cb': funcref('ErrCallback'),
             'exit_cb': funcref('ExecutePythonCallback')
         }
         g:errmsg = []
