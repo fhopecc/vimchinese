@@ -58,7 +58,7 @@ command! ShowDocument call ShowDocument()
 def ExecutePython()
     try
         w!
-        va command_list = ['py', '-u', expand('%')]
+        var command_list = ['py', '-u', expand('%')]
         var job_options = {
             'out_io': 'buffer',
             'err_io': 'buffer', 
