@@ -100,7 +100,7 @@ def ExecutePythonCallback(job: job, status: number)
     py3 << EOS 
 from zhongwen.python import 取錯誤位置清單
 import vim
-qf = 取錯誤位置清單(vim.eval('g:decoded_els')) 
+qf = 取錯誤位置清單(vim.eval('g:errs')) 
 EOS
     g:popup_beval->popup_close() 
     setqflist(py3eval('qf'))
