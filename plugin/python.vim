@@ -1,7 +1,7 @@
 vim9script
 
 map <leader>e <scriptcmd>ExecutePython<cr>
-map <leader>t <scriptcmd>TestPython<cr>
+map <leader>T <scriptcmd>TestPython<cr>
 
 # 至檔案
 def GotoFile()
