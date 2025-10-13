@@ -70,7 +70,7 @@ import vim
 問題 = vim.eval("b:question")
 if len(問題)==1:
     rs = 查萌典(問題)
-else:
+elif len(問題) > 30:
     rs = 詢問(問題, 不輸出回答=True).splitlines()
 EOF
     if question->strchars() > 1 && question->strchars() < 30
