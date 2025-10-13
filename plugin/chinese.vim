@@ -1,5 +1,6 @@
 vim9script
 ##### 命令定義 #####
+
 #====   單鍵   ====#
 
 # 查中文字義、英詞中文譯詞、連結 URL 網頁。
@@ -30,6 +31,8 @@ map <leader>q <cmd>Leaderf quickfix  --popup<cr>
 # 最大化視窗
 map <leader>o <c-w><c-o><cr> 
 
+map <leader>w <c-w>w
+
 # 複製選取行至剪貼簿
 map <leader>y "*yy
 
@@ -59,8 +62,8 @@ vmap T y:GTrans <c-r>"<cr>
 
 # 單字問萌典，單字以上詢問谷歌雙子星模型
 def QueryLLM(question: string)
-b:question = question
-python3 << EOF
+    b:question = question
+    py3 << EOF
 from zhongwen.文 import 查萌典
 from zhongwen.智 import 詢問
 import vim
@@ -69,21 +72,24 @@ if len(問題)==1:
     rs = 查萌典(問題)
 else:
     rs = 詢問(問題, 不輸出回答=True).splitlines()
-vim.vars['__chinese__response'] = rs
 EOF
-@* = join(g:__chinese__response, "\n")
-popup_clear(1)
-var opts: dict<any> = {
-    'title': 'ctrl-j/k 捲動上/下，ctrl-q 關閉'
-}
-call popup_create(g:__chinese__response, opts)
+    if question->strchars() > 1 && question->strchars() < 30
+        Google(question)
+    else
+        @* = join(py3eval("rs"), "\n") # 結果複製至剪貼簿
+        popup_clear(1)
+        var opts: dict<any> = {
+            'title': b:question .. '【ctrl-j/k 捲動上/下，ctrl-q 關閉】'
+        }
+        call popup_create(py3eval("rs"), opts)
+    endif
 enddef
 command! -nargs=+ Q call <sid>QueryLLM(<q-args>)
 
-# :G -> 關鍵字查詢
-command! -nargs=+ Google :!start "https://www.google.com/search?q=<args>"
-
-map <leader>w <c-w>w
+def Google(query: string)
+    var command = ['cmd', '/c', 'start', 'https://www.google.com/search?q=' .. query]
+    job_start(command, {})
+enddef
 
 ##### 命令函數定義 #####
 
