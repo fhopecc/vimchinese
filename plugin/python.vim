@@ -1,68 +1,65 @@
 vim9script
 ### Python 檔案編輯相關函數及命令 ###
 
-# 執行編輯中腳本
-def ExecutePython()
+# 執行編輯中程式
+def ExecutePython(pyname: string = '')
     try
         w!
-        var command_list = ['py', '-u', expand('%')]
+        var py = pyname
+        if py == ''
+            py = expand('%')
+        endif
+        var command_list = ['py', '-u', py]
         var job_options = {
             'out_io': 'buffer',
             'err_io': 'buffer', 
+            'out_name': '輸出', 
+            'err_name': '輸出', 
             'exit_cb': funcref('ExecutePythonCallback')
         }
-        g:errmsg = []
-        g:out = []
+        bufnr('輸出')->deletebufline(1, bufnr('輸出')->getbufinfo()[0].linecount)
         var job = job_start(command_list, job_options)
-        g:popup_beval = popup_beval('執行' .. expand('%'), {})
+        g:popup_execute_python = popup_dialog('執行' .. expand('%'), {})
     catch
         var errmsg = '執行' .. expand('%') .. "失敗，主要係發生" .. v:exception
-        popup_notification(errmsg, {})       
+        echom errmsg
     endtry
 enddef
 command! ExecutePython call ExecutePython()
 
 def ExecutePythonCallback(job: job, status: number)
-    var outbuf = job->ch_getbufnr('out')
-    var errbuf = job->ch_getbufnr('err')
-    const ls = outbuf->getbufline(1, '$') + errbuf->getbufline(1, '$')
-    g:outall = []
-    for l in ls
-        const decoded_l = iconv(l, 'cp950', 'utf-8')
-        g:outall->add(decoded_l)
-    endfor
-    setbufline(outbuf, 1, [])
-    setbufline(outbuf, 1, g:outall)
-    execute 'sbuf ' .. string(outbuf)
+    try
+        const ls = bufnr('輸出')->getbufline(1, '$')
+        var out = []
+        for l in ls
+            const decoded_l = iconv(l, 'cp950', 'utf-8')
+            out->add(decoded_l)
+        endfor
+        setbufline(bufnr('輸出'), 1, [])
+        setbufline(bufnr('輸出'), 1, out)
+        execute 'sbuf ' .. '輸出'
 
-    py3 << EOS 
+        py3 << EOS 
 from zhongwen.python import 取錯誤位置清單
 import vim
-qf = 取錯誤位置清單(vim.eval('g:outall')) 
+qf = 取錯誤位置清單(vim.buffers[int(vim.eval('bufnr("輸出")'))]) 
 EOS
-    g:popup_beval->popup_close() 
-    setqflist(py3eval('qf'), 'r')
-    Leaderf quickfix --popup 
+        g:popup_execute_python->popup_close() 
+        setqflist(py3eval('qf'), 'r')
+        Leaderf quickfix --popup 
+   catch 
+        var errmsg = '執行' .. expand('%') .. "失敗，主要係發生" .. v:exception
+        echom errmsg
+        # popup_notification(errmsg, {})       
+   endtry
 enddef
 
 # 測試編輯中腳本
 def TestPython()
-    try
-        w!
-        py3 from zhongwen.python import find_testfile
-        var testfile = py3eval("find_testfile(r'" .. expand('%') .. "')")
-        var command_list = ['py', '-u', testfile]
-        var job_options = {
-            'out_io': 'buffer',
-            'err_io': 'buffer', 
-            'exit_cb': funcref('ExecutePythonCallback')
-        }
-        var job = job_start(command_list, job_options)
-        g:popup_beval = popup_beval('測試' .. expand('%'), {})
-    catch
-        var errmsg = '測試' .. expand('%') .. "失敗，主要係發生" .. v:exception
-        popup_notification(errmsg, {})       
-    endtry
+    w!
+    py3 from zhongwen.python import find_testfile
+    var testfile = py3eval("find_testfile(r'" .. expand('%') .. "')")
+    ExecutePython(testfile)
 enddef
 command! TestPython call TestPython()
 
