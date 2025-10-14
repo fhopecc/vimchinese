@@ -21,8 +21,7 @@ def ExecutePython(pyname: string = '')
         var job = job_start(command_list, job_options)
         g:popup_execute_python = popup_dialog('執行' .. expand('%'), {})
     catch
-        var errmsg = '執行' .. expand('%') .. "失敗，主要係發生" .. v:exception
-        echom errmsg
+        echom v:errmsg
     endtry
 enddef
 command! ExecutePython call ExecutePython()
@@ -48,9 +47,7 @@ EOS
         setqflist(py3eval('qf'), 'r')
         Leaderf quickfix --popup 
    catch 
-        var errmsg = '執行' .. expand('%') .. "失敗，主要係發生" .. v:exception
-        echom errmsg
-        # popup_notification(errmsg, {})       
+        echom v:errmsg
    endtry
 enddef
 
