@@ -21,7 +21,6 @@ command! Cwd exe 'cd '.expand("%:p:h")
 command! -buffer ChangeWindow normal <c-w>w
 command! -buffer MaxWindow normal <c-w>o
 
-
 # 效能
 def ProfilePython()
     w!

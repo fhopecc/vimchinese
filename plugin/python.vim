@@ -37,7 +37,7 @@ def ExecutePythonCallback(job: job, status: number)
         endfor
         setbufline(bufnr('輸出'), 1, [])
         setbufline(bufnr('輸出'), 1, out)
-        execute 'sbuf ' .. '輸出'
+        execute 'buf ' .. '輸出'
 
         py3 << EOS 
 from zhongwen.python import 取錯誤位置清單
