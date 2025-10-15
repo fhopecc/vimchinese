@@ -50,8 +50,11 @@ import vim
 qf = 取錯誤位置清單(vim.buffers[int(vim.eval('bufnr("輸出")'))]) 
 EOS
         g:popup_execute_python->popup_close() 
-        setqflist(py3eval('qf'), 'r')
-        Leaderf quickfix --popup 
+        var qf = py3eval('qf')
+        if len(qf) > 0
+            setqflist(qf, 'r')
+            Leaderf quickfix --popup 
+        endif
     catch 
         echom 'ExecutePythonCallback發生錯誤：'
         echom v:throwpoint
