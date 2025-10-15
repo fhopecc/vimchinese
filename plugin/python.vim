@@ -17,10 +17,16 @@ def ExecutePython(pyname: string = '')
             'err_name': '輸出', 
             'exit_cb': funcref('ExecutePythonCallback')
         }
-        bufnr('輸出')->deletebufline(1, bufnr('輸出')->getbufinfo()[0].linecount)
+        try
+            bufnr('輸出')->deletebufline(1, bufnr('輸出')->getbufinfo()[0].linecount)
+        catch
+            # 不存在輸出 buf 之錯誤，待 job 之後建置，不作任何事。
+        endtry
         var job = job_start(command_list, job_options)
         g:popup_execute_python = popup_dialog('執行' .. expand('%'), {})
     catch
+        echom 'ExecutePython發生錯誤：'
+        echom v:throwpoint
         echom v:errmsg
     endtry
 enddef
@@ -46,9 +52,11 @@ EOS
         g:popup_execute_python->popup_close() 
         setqflist(py3eval('qf'), 'r')
         Leaderf quickfix --popup 
-   catch 
+    catch 
+        echom 'ExecutePythonCallback發生錯誤：'
+        echom v:throwpoint
         echom v:errmsg
-   endtry
+    endtry
 enddef
 
 # 測試編輯中腳本
