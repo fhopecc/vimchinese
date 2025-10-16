@@ -23,7 +23,12 @@ def ExecutePython(pyname: string = '')
             # 不存在輸出 buf 之錯誤，待 job 之後建置，不作任何事。
         endtry
         var job = job_start(command_list, job_options)
-        g:popup_execute_python = popup_dialog('執行' .. expand('%'), {})
+        var msg = '執行' .. expand('%') .. '……'
+        var options = {
+            'line': 1, 
+            'col': (winwidth(0) - msg->strlen()) / 2
+        }
+        g:popup_execute_python = msg->popup_create(options)
     catch
         echom 'ExecutePython發生錯誤：'
         echom v:throwpoint
@@ -43,18 +48,7 @@ def ExecutePythonCallback(job: job, status: number)
         setbufline(bufnr('輸出'), 1, [])
         setbufline(bufnr('輸出'), 1, out)
         execute 'buf ' .. '輸出'
-
-        py3 << EOS 
-from zhongwen.python import 取錯誤位置清單
-import vim
-qf = 取錯誤位置清單(vim.buffers[int(vim.eval('bufnr("輸出")'))]) 
-EOS
         g:popup_execute_python->popup_close() 
-        var qf = py3eval('qf')
-        if len(qf) > 0
-            setqflist(qf, 'r')
-            Leaderf quickfix --popup 
-        endif
     catch 
         echom 'ExecutePythonCallback發生錯誤：'
         echom v:throwpoint
