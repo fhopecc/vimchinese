@@ -190,6 +190,12 @@ for c in string.ascii_lowercase:
 EOS
 enddef
 
+# 取得使用者 vimfiles 目錄
+def! g:GetUserVimfiles(): string
+    # runtimepath 係逗號分隔路徑字串，列表首元素即使用者目錄。
+    return split(&runtimepath, ',')[0]->substitute('/', '\\', 'g')
+enddef
+
 ##### 選項設定 #####
 set bufhidden=hide # 隱藏 Buffer 時不卸載，以保留狀態(如折疊資訊)。
 set guifont=Microsoft_YaHei_Mono:h16 # 中文字型
