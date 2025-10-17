@@ -1,22 +1,38 @@
 vim9script
 
-# 顯示目次
+# <leader>O -> 顯示目次
 map <buffer> <leader>O <cmd>setlocal foldlevel=2<cr>
 
 # <leader>e -> 網頁表達
+map <buffer> <leader>e <cmd>call <sid>ToHTML()<cr>
+
+# <leader>P -> 公布至洄瀾打狗人網站
+map <buffer> <leader>P <cmd>call <sid>Post()<cr>
+
+# :ToDOCX -> 轉成 docx 檔
+command -buffer ToDOCX call ToDOCX()
+
+def ToDOCX()
+    w!
+    py3 << EOF
+from zhongwen.office_document import markdown2docx
+import vim
+file = vim.eval('expand("%:p")')
+markdown2docx(file)
+EOF
+enddef
+
 def ToHTML()
     w!
 py3 << EOF
-
 from zhongwen.markdown import 網頁表達
 import vim
 file = vim.eval('expand("%:p")')
 網頁表達(file)
 EOF
 enddef
-map <buffer> <leader>e <cmd>call <sid>ToHTML()<cr>
 
-# <leader>P -> 公布至洄瀾打狗人網站
+# 公布至洄瀾打狗人網站
 def Post()
     py3 << EOF
 from fhopecc.洄瀾打狗人札記 import 張貼
@@ -30,19 +46,23 @@ logging.getLogger().setLevel(logging.INFO)
 vim.command(f'echo "【{Path(file).stem}】已張貼至洄瀾打狗人。"')
 EOF
 enddef
-map <buffer> <leader>P <cmd>call <sid>Post()<cr>
 
-# :ToDOCX -> 轉成 docx 檔
-def ToDOCX()
-w!
-py3 << EOF
-from zhongwen.office_document import markdown2docx
-import vim
-file = vim.eval('expand("%:p")')
-markdown2docx(file)
-EOF
+# 審核意見轉通知
+def ToInform()
+    %s/聲復\(本室.\+一案\)，謹擬具處理意見\(如說明二\)\?，簽請鑒核。/聲復\1，核復如說明二，請查照辦理見復。/ge
+    %s/依據\(.\+函\)辦理。/復\1。/ge
+    %s/旨案.\+，擬具處理意見如次：/核復事項：/ge
+    %s/宜蘭縣政府/貴府/ge
+    %s/宜蘭縣立殯葬管理所/貴場/ge
+    %s/該府/貴府/ge
+    %s/該場/貴場/ge
+    %s/據復：/承復：/ge
+    %s/擬復請/請/ge
+    %s/擬復//ge
+    %s/其餘通知事項.\+//ge
+    %s/擬奉核可後，.\+//ge
 enddef
-command -buffer ToDOCX call ToDOCX()
+command! -buffer ToInform call ToInform()
 
 g:vim_markdown_math = 1
 
@@ -91,13 +111,5 @@ def ToPPT()
     execute("silent :! pandoc % -o " . pptx)
     execute("silent :! \"" . powerpnt . "\" /S " . pptx)
 enddef
-map <buffer> <leader>S :call markdown#2pptx()<CR>
 
-# markdown 指令
-# m1 插入條列一
-# m2 插入條列二
-# m3 插入條列三
-map <buffer> m0 <cmd>py3 import markdown;markdown.設定條列(0)<cr>
-map <buffer> m1 <cmd>py3 import markdown;markdown.設定條列(1)<cr>
-map <buffer> m2 <cmd>py3 import markdown;markdown.設定條列(2)<cr>
-map <buffer> m3 <cmd>py3 import markdown;markdown.設定條列(3)<cr>
+set foldlevel=2 
