@@ -24,7 +24,7 @@ enddef
 
 def ToHTML()
     w!
-py3 << EOF
+    py3 << EOF
 from zhongwen.markdown import 網頁表達
 import vim
 file = vim.eval('expand("%:p")')
@@ -111,5 +111,3 @@ def ToPPT()
     execute("silent :! pandoc % -o " . pptx)
     execute("silent :! \"" . powerpnt . "\" /S " . pptx)
 enddef
-
-set foldlevel=2 
