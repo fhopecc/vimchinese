@@ -1,5 +1,8 @@
 vim9script
 
+# J -> 連接下行，惟調整連接處不加空格，以符合中文無空格文法。
+nmap <buffer> J gJ
+
 # <leader>O -> 顯示目次
 map <buffer> <leader>O <cmd>setlocal foldlevel=2<cr>
 
