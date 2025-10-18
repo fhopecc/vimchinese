@@ -1,12 +1,13 @@
 vim9script
 
-# 執行游標行
-noremap <buffer> <leader>e :w!<cr>:so %<cr>
+# K -> 查詢游標指令說明
+noremap <buffer> K :h <c-r><c-w><cr>
+
+# <leader>E 執行游標所在行指令
 noremap <buffer> <leader>E :execute getline(".")<cr>
 
-# K -> 查詢游標指令說明
-noremap <buffer> <leader>K :h <c-r><c-w><cr>
+# <leader>e -> 執行編輯VIM指令檔
+noremap <buffer> <leader>e :w!<cr>:so %<cr>
 
-# 布署
-map <buffer> <expr> <plug>deployvim ":w!<CR>:R cd " . g:wpath . "\\vimfiles&&inv d<CR>" 
-map <buffer> <leader>D <plug>deployvim
+# <leader>D -> 布署VIM指令檔
+noremap <buffer> <leader>D <cmd>DeployVIM
