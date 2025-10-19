@@ -2,6 +2,7 @@ vim9script
 
 # 布署編輯程式碼
 def DeployVIM()
+    w!
     py3 << EOS
 from invoke import Context
 from tasks import deploy_vim

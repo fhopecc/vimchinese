@@ -31,7 +31,7 @@ def Complete(findstart: number, base: string): any
     endif
 
     py3 <<EOS
-from zhongwen.文 import 取簡稱補全選項, 取英文單字補全選項, 取最近詞首
+from zhongwen.文 import 取簡稱補全選項, 取詞補全選項, 取最近詞首
 from zhongwen.法規 import 取法規補全選項
 from zhongwen.檔 import 取檔名補全選項
 import vim
@@ -59,7 +59,7 @@ if vim.eval("&filetype") == 'vim':
             suggest += [{'word':s[len(cword):], 'abbr':s, 'kind':completiontype} for s in vimcomp]
 suggest += 取法規補全選項(text, lno, colno)
 suggest += 取簡稱補全選項(text, lno, colno)
-suggest += 取英文單字補全選項(text, lno, colno)
+suggest += 取詞補全選項(text, lno, colno)
 suggest += 取檔名補全選項(text, lno, colno)
 EOS
     return {'words': py3eval("suggest"), 'refresh': 'always'}
