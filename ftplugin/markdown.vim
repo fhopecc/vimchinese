@@ -1,7 +1,17 @@
 vim9script
 
-# J -> 連接下行，惟調整連接處不加空格，以符合中文無空格文法。
-nmap <buffer> J gJ
+setlocal nocursorline # 多文字高亮編輯行不習慣
+setlocal wrap # 中文自然段較長啟用自動 wrap
+
+# 依視窗寛度自動斷行，j k 移動以視窗行為主而非實際行
+noremap <buffer> j gj
+noremap <buffer> k gk
+noremap <buffer> gj j
+noremap <buffer> gk k
+
+# J -> 不加空格連接下行，以符合中文無空格文法。
+noremap <buffer> J gJ
+noremap <buffer> gJ J
 
 # <leader>c -> 搜尋內容
 map <buffer> <leader>c <cmd>Leaderf line --popup --no-auto-preview<cr>
@@ -117,3 +127,27 @@ def ToPPT()
     execute("silent :! pandoc % -o " . pptx)
     execute("silent :! \"" . powerpnt . "\" /S " . pptx)
 enddef
+
+
+
+" 段落移動
+let s:pattern = '\([一二三四五六七][)）、]\)\|(\?\([1234][\.)）、]\)'
+function NextPara()
+    call search(s:pattern)
+endfunction
+function PrePara()
+    call search(s:pattern, 'b')
+endfunction
+noremap <buffer> ] :call NextPara()<CR>
+noremap <buffer> [ :call PrePara()<CR>
+
+" 章節移動
+let s:chapter_pattern = '^|.\+|'
+function NextChapter()
+    call search(s:chapter_pattern)
+endfunction
+function PreChapter()
+    call search(s:chapter_pattern, 'b')
+endfunction
+noremap <buffer> } :call NextChapter()<CR>
+noremap <buffer> { :call PreChapter()<CR>
