@@ -127,27 +127,3 @@ def ToPPT()
     execute("silent :! pandoc % -o " . pptx)
     execute("silent :! \"" . powerpnt . "\" /S " . pptx)
 enddef
-
-
-
-" 段落移動
-let s:pattern = '\([一二三四五六七][)）、]\)\|(\?\([1234][\.)）、]\)'
-function NextPara()
-    call search(s:pattern)
-endfunction
-function PrePara()
-    call search(s:pattern, 'b')
-endfunction
-noremap <buffer> ] :call NextPara()<CR>
-noremap <buffer> [ :call PrePara()<CR>
-
-" 章節移動
-let s:chapter_pattern = '^|.\+|'
-function NextChapter()
-    call search(s:chapter_pattern)
-endfunction
-function PreChapter()
-    call search(s:chapter_pattern, 'b')
-endfunction
-noremap <buffer> } :call NextChapter()<CR>
-noremap <buffer> { :call PreChapter()<CR>
