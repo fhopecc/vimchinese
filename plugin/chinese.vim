@@ -19,7 +19,7 @@ map <leader>f <cmd>Leaderf file --popup .<cr>
 # 搜尋緩衝
 map <leader>b <cmd>Leaderf buffer --popup<cr>
 
-# 查找標記
+# 查找內容
 map <leader>c <cmd>Leaderf bufTag --popup<cr>
 
 # 搜尋最近檔案
