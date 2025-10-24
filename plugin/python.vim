@@ -66,7 +66,7 @@ def ExecutePythonCallback(job: job, status: number)
         endfor
         g:popup_execute_python->popup_close() 
         setlocal hlsearch
-        search('File .\+, line \d\+', 'w')
+        search('File .\+, line \d\+', 'wb')
         nmap <buffer> ]] <cmd>/File .\+, line \d\+<cr>
         nmap <buffer> [[ <cmd>?File .\+, line \d\+<cr>
     catch 
