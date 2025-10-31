@@ -15,6 +15,8 @@ def ExecutePython(pyname: string = '')
             'err_io': 'buffer', 
             'out_name': '輸出', 
             'err_name': '輸出', 
+            'out_msg': 0, 
+            'err_msg': 0, 
             'exit_cb': funcref('ExecutePythonCallback')
         }
         try
@@ -65,12 +67,12 @@ def ExecutePythonCallback(job: job, status: number)
                     matchaddpos('LineNr', [total_lines], 10, -1, { 'bufnr': bufnr('輸出') })
                 endif
             endfor
-            g:popup_execute_python->popup_close() 
             setlocal hlsearch
             search('File .\+, line \d\+', 'wb')
             nmap <buffer> ]] <cmd>/File .\+, line \d\+<cr>
             nmap <buffer> [[ <cmd>?File .\+, line \d\+<cr>
         endif
+        g:popup_execute_python->popup_close() 
     catch 
         echom 'ExecutePythonCallback發生錯誤：'
         echom v:throwpoint
