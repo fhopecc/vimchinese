@@ -44,7 +44,6 @@ def ExecutePythonCallback(job: job, status: number)
         const ls = bufnr('輸出')->getbufline(1, '$')
         var out = []
         if len(join(ls, '')) > 0
-            echom "len(ls)==" .. string(join(ls, ''))
             for l in ls
                 const decoded_l = iconv(l, 'cp950', 'utf-8')
                 out->add(decoded_l)
