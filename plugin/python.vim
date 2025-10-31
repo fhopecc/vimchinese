@@ -25,7 +25,7 @@ def ExecutePython(pyname: string = '')
             # 不存在輸出 buf 之錯誤，待 job 之後建置，不作任何事。
         endtry
         var job = job_start(command_list, job_options)
-        var msg = '執行' .. expand('%') .. '……'
+        var msg = '執行' .. expand('%:t') .. '……'
         var options = {
             'line': 1, 
             'col': (winwidth(0) - msg->strlen()) / 2
@@ -44,6 +44,7 @@ def ExecutePythonCallback(job: job, status: number)
         const ls = bufnr('輸出')->getbufline(1, '$')
         var out = []
         if len(ls) > 0
+            echom "len(ls)==" .. string(ls)
             for l in ls
                 const decoded_l = iconv(l, 'cp950', 'utf-8')
                 out->add(decoded_l)
