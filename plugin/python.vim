@@ -41,34 +41,36 @@ def ExecutePythonCallback(job: job, status: number)
     try
         const ls = bufnr('輸出')->getbufline(1, '$')
         var out = []
-        for l in ls
-            const decoded_l = iconv(l, 'cp950', 'utf-8')
-            out->add(decoded_l)
-        endfor
-        setbufline(bufnr('輸出'), 1, [])
-        setbufline(bufnr('輸出'), 1, out)
-        execute 'buf ' .. '輸出'
+        if len(ls) > 0
+            for l in ls
+                const decoded_l = iconv(l, 'cp950', 'utf-8')
+                out->add(decoded_l)
+            endfor
+            setbufline(bufnr('輸出'), 1, [])
+            setbufline(bufnr('輸出'), 1, out)
+            execute 'buf ' .. '輸出'
 
-        # 刪除所有自定義 ID (> 3) 的高亮匹配
-        var matches = getmatches()
-        for m in matches
-            if m.id > 3
-                matchdelete(m.id)
-            endif
-        endfor
+            # 刪除所有自定義 ID (> 3) 的高亮匹配
+            var matches = getmatches()
+            for m in matches
+                if m.id > 3
+                    matchdelete(m.id)
+                endif
+            endfor
 
-        var total_lines = 0
-        for line_text in out
-            total_lines += 1 
-            if line_text->match('Error') >= 0
-                matchaddpos('LineNr', [total_lines], 10, -1, { 'bufnr': bufnr('輸出') })
-            endif
-        endfor
-        g:popup_execute_python->popup_close() 
-        setlocal hlsearch
-        search('File .\+, line \d\+', 'wb')
-        nmap <buffer> ]] <cmd>/File .\+, line \d\+<cr>
-        nmap <buffer> [[ <cmd>?File .\+, line \d\+<cr>
+            var total_lines = 0
+            for line_text in out
+                total_lines += 1 
+                if line_text->match('Error') >= 0
+                    matchaddpos('LineNr', [total_lines], 10, -1, { 'bufnr': bufnr('輸出') })
+                endif
+            endfor
+            g:popup_execute_python->popup_close() 
+            setlocal hlsearch
+            search('File .\+, line \d\+', 'wb')
+            nmap <buffer> ]] <cmd>/File .\+, line \d\+<cr>
+            nmap <buffer> [[ <cmd>?File .\+, line \d\+<cr>
+        endif
     catch 
         echom 'ExecutePythonCallback發生錯誤：'
         echom v:throwpoint
