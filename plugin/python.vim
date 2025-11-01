@@ -9,28 +9,31 @@ def ExecutePython(pyname: string = '')
         if py == ''
             py = expand('%')
         endif
-        var command_list = ['py', '-u', py]
-        var job_options = {
-            'out_io': 'buffer',
-            'err_io': 'buffer', 
-            'out_name': '輸出', 
-            'err_name': '輸出', 
-            'out_msg': 0, 
-            'err_msg': 0, 
-            'exit_cb': funcref('ExecutePythonCallback')
-        }
-        try
-            bufnr('輸出')->deletebufline(1, bufnr('輸出')->getbufinfo()[0].linecount)
-        catch
-            # 不存在輸出 buf 之錯誤，待 job 之後建置，不作任何事。
-        endtry
-        var job = job_start(command_list, job_options)
-        var msg = '執行' .. expand('%:t') .. '……'
+
+        var msg = '執行' .. fnamemodify(py, ':t') .. '……'
         var options = {
             'line': 1, 
             'col': (winwidth(0) - msg->strlen()) / 2
         }
-        g:popup_execute_python = msg->popup_create(options)
+        var notify_popup_id = msg->popup_create(options)
+
+        var out_name = '輸出' .. '(' .. fnamemodify(py, ':t') .. ')'
+        var command_list = ['py', '-u', py]
+        var job_options = {
+            'out_io': 'buffer',
+            'err_io': 'buffer', 
+            'out_name': out_name, 
+            'err_name': out_name, 
+            'out_msg': 0, 
+            'err_msg': 0, 
+            'exit_cb': (j, e) => ExecutePythonCallback(out_name, notify_popup_id, j, e)
+        }
+        try
+            bufnr(out_name)->deletebufline(1, bufnr(out_name)->getbufinfo()[0].linecount)
+        catch
+            # 不存在輸出 buf 之錯誤，待 job 之後建置，不作任何事。
+        endtry
+        var job = job_start(command_list, job_options)
     catch
         echom 'ExecutePython發生錯誤：'
         echom v:throwpoint
@@ -39,18 +42,18 @@ def ExecutePython(pyname: string = '')
 enddef
 command! ExecutePython call ExecutePython()
 
-def ExecutePythonCallback(job: job, status: number)
+def ExecutePythonCallback(out_name: string, notify_popup_id: number, job: job, status: number)
     try
-        const ls = bufnr('輸出')->getbufline(1, '$')
+        const ls = bufnr(out_name)->getbufline(1, '$')
         var out = []
         if len(join(ls, '')) > 0
             for l in ls
                 const decoded_l = iconv(l, 'cp950', 'utf-8')
                 out->add(decoded_l)
             endfor
-            setbufline(bufnr('輸出'), 1, [])
-            setbufline(bufnr('輸出'), 1, out)
-            execute 'buf ' .. '輸出'
+            setbufline(bufnr(out_name), 1, [])
+            setbufline(bufnr(out_name), 1, out)
+            execute 'buf ' .. out_name
 
             # 刪除所有自定義 ID (> 3) 的高亮匹配
             var matches = getmatches()
@@ -64,7 +67,7 @@ def ExecutePythonCallback(job: job, status: number)
             for line_text in out
                 total_lines += 1 
                 if line_text->match('Error') >= 0
-                    matchaddpos('LineNr', [total_lines], 10, -1, { 'bufnr': bufnr('輸出') })
+                    matchaddpos('LineNr', [total_lines], 10, -1, { 'bufnr': bufnr(out_name) })
                 endif
             endfor
             setlocal hlsearch
@@ -72,7 +75,7 @@ def ExecutePythonCallback(job: job, status: number)
             nmap <buffer> ]] <cmd>/File .\+, line \d\+<cr>
             nmap <buffer> [[ <cmd>?File .\+, line \d\+<cr>
         endif
-        g:popup_execute_python->popup_close() 
+        notify_popup_id->popup_close() 
     catch 
         echom 'ExecutePythonCallback發生錯誤：'
         echom v:throwpoint
@@ -97,6 +100,7 @@ import vim
 line = vim.eval("getline('.')")
 錯誤位置 = 取文檔位置(line)
 vim.command(f"e! +{錯誤位置['列']} {錯誤位置['路徑']}")
+# vim.command(f"echom +{錯誤位置['列']} {錯誤位置['路徑']}")
 EOS
 enddef
 command! GotoFile call GotoFile()
