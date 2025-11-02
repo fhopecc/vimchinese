@@ -1,7 +1,7 @@
 vim9script
 
 # 非同步執行程式
-def AsynRun(command: string)
+def AsyncRun(command: string)
     try
         var command_list = split(command)
         var msg: string = $"執行 {command}"
@@ -24,18 +24,18 @@ def AsynRun(command: string)
             'err_name': outbuf, 
             'out_msg': 0, 
             'err_msg': 0, 
-            'exit_cb': (j, e) => AsynRunCallback(outbuf, notify_popup_id, j, e)
+            'exit_cb': (j, e) => AsyncRunCallback(outbuf, notify_popup_id, j, e)
         }
         var job = job_start(command_list, job_options)
     catch
-        echom 'AsynRun發生錯誤：'
+        echom 'AsyncRun發生錯誤：'
         echom v:throwpoint
         echom v:errmsg
     endtry
 enddef
-command! -nargs=1 AsynRun call AsynRun(<q-args>)
+command! -nargs=1 AsyncRun call AsyncRun(<q-args>)
 
-def AsynRunCallback(outbuf: string, notify_popup_id: number, job: job, status: number)
+def AsyncRunCallback(outbuf: string, notify_popup_id: number, job: job, status: number)
     try
         const ls = bufnr(outbuf)->getbufline(1, '$')
         var out = []
@@ -70,7 +70,7 @@ def AsynRunCallback(outbuf: string, notify_popup_id: number, job: job, status: n
         endif
         notify_popup_id->popup_close() 
     catch 
-        echom 'AsynRunCallback發生錯誤：'
+        echom 'AsyncRunCallback發生錯誤：'
         echom v:throwpoint
         echom v:errmsg
     endtry
