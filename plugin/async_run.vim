@@ -33,7 +33,7 @@ def AsyncRun(command: string)
         echom v:errmsg
     endtry
 enddef
-command! -nargs=1 AsyncRun call AsyncRun(<q-args>)
+command! -nargs=1 AsyncRun call <sid>AsyncRun(<q-args>)
 
 def AsyncRunCallback(outbuf: string, notify_popup_id: number, job: job, status: number)
     try

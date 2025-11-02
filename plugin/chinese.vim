@@ -39,9 +39,6 @@ map <leader>y "*yy
 # 貼上剪貼簿資料
 map <leader>p "*p
 
-# Google 查詢游標關鍵字
-map <leader>G :Google <cword><cr>
-
 #====   參鍵   ====#
 
 #====   多鍵   ====#
@@ -84,11 +81,11 @@ EOF
         call popup_create(py3eval("rs"), opts)
     endif
 enddef
-command! -nargs=+ Q call <sid>QueryLLM(<q-args>)
+command! -nargs=1 Q call <sid>QueryLLM(<q-args>)
 
 def Google(query: string)
-    var command = ['cmd', '/c', 'start', 'https://www.google.com/search?q=' .. query]
-    job_start(command, {})
+    var command = $":AsyncRun cmd.exe /c start https://www.google.com/search?q={query}"
+    execute command
 enddef
 
 ##### 命令函數定義 #####
