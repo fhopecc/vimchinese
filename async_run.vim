@@ -4,7 +4,6 @@ vim9script
 def AsynRun(command: string)
     try
         var command_list = split(command)
-        echom command_list
         var msg: string = $"執行 {command}"
         var options = {
             'line': 1, 
@@ -39,7 +38,6 @@ command! -nargs=1 AsynRun call AsynRun(<q-args>)
 def AsynRunCallback(outbuf: string, notify_popup_id: number, job: job, status: number)
     try
         const ls = bufnr(outbuf)->getbufline(1, '$')
-        echom outbuf
         var out = []
         if len(join(ls, '')) > 0
             for l in ls
