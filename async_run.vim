@@ -1,47 +1,76 @@
 vim9script
 
 # 非同步執行程式
-def AsynRun(command: list<string>)
+def AsynRun(command: string)
     try
-        var job_options = {
-            'out_io': 'buffer',
-            'err_io': 'buffer', 
-            'out_name': '輸出', 
-            'err_name': '輸出', 
-            'exit_cb': funcref('AsynRunCallback')
+        var command_list = split(command)
+        echom command_list
+        var msg: string = $"執行 {command}"
+        var options = {
+            'line': 1, 
+            'col': (winwidth(0) - msg->strdisplaywidth()) / 2
         }
+        var notify_popup_id = msg->popup_create(options)
+
+        var outbuf = $"輸出(#{command_list[0]})"
         try
-            bufnr('輸出')->deletebufline(1, bufnr('輸出')->getbufinfo()[0].linecount)
+            bufnr(outbuf)->deletebufline(1, bufnr(outbuf)->getbufinfo()[0].linecount)
         catch
             # 不存在輸出 buf 之錯誤，待 job 之後建置，不作任何事。
         endtry
-        var job = job_start(command_list, job_options)
-        var msg = '執行' .. expand('%') .. '……'
-        var options = {
-            'line': 1, 
-            'col': (winwidth(0) - msg->strlen()) / 2
+        var job_options = {
+            'out_io': 'buffer',
+            'err_io': 'buffer', 
+            'out_name': outbuf, 
+            'err_name': outbuf, 
+            'out_msg': 0, 
+            'err_msg': 0, 
+            'exit_cb': (j, e) => AsynRunCallback(outbuf, notify_popup_id, j, e)
         }
-        g:popup_execute_python = msg->popup_create(options)
+        var job = job_start(command_list, job_options)
     catch
         echom 'AsynRun發生錯誤：'
         echom v:throwpoint
         echom v:errmsg
     endtry
 enddef
-command! AsynRun call AsynRun()
+command! -nargs=1 AsynRun call AsynRun(<q-args>)
 
-def AsynRunCallback(job: job, status: number)
+def AsynRunCallback(outbuf: string, notify_popup_id: number, job: job, status: number)
     try
-        const ls = bufnr('輸出')->getbufline(1, '$')
+        const ls = bufnr(outbuf)->getbufline(1, '$')
+        echom outbuf
         var out = []
-        for l in ls
-            const decoded_l = iconv(l, 'cp950', 'utf-8')
-            out->add(decoded_l)
-        endfor
-        setbufline(bufnr('輸出'), 1, [])
-        setbufline(bufnr('輸出'), 1, out)
-        execute 'buf ' .. '輸出'
-        g:popup_execute_python->popup_close() 
+        if len(join(ls, '')) > 0
+            for l in ls
+                const decoded_l = iconv(l, 'cp950', 'utf-8')
+                out->add(decoded_l)
+            endfor
+            setbufline(bufnr(outbuf), 1, [])
+            setbufline(bufnr(outbuf), 1, out)
+            execute 'buf ' .. outbuf
+
+            # 刪除所有自定義 ID (> 3) 的高亮匹配
+            var matches = getmatches()
+            for m in matches
+                if m.id > 3
+                    matchdelete(m.id)
+                endif
+            endfor
+
+            var total_lines = 0
+            for line_text in out
+                total_lines += 1 
+                if line_text->match('Error') >= 0
+                    matchaddpos('LineNr', [total_lines], 10, -1, { 'bufnr': bufnr(outbuf) })
+                endif
+            endfor
+            setlocal hlsearch
+            search('File .\+, line \d\+', 'wb')
+            nmap <buffer> ]] <cmd>/File .\+, line \d\+<cr>
+            nmap <buffer> [[ <cmd>?File .\+, line \d\+<cr>
+        endif
+        notify_popup_id->popup_close() 
     catch 
         echom 'AsynRunCallback發生錯誤：'
         echom v:throwpoint
