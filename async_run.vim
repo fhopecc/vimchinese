@@ -11,7 +11,7 @@ def AsynRun(command: string)
         }
         var notify_popup_id = msg->popup_create(options)
 
-        var outbuf = $"輸出({command})"
+        var outbuf = $"輸出({command->substitute('[ \\]', '_', 'g')}"
         try
             bufnr(outbuf)->deletebufline(1, bufnr(outbuf)->getbufinfo()[0].linecount)
         catch
