@@ -12,7 +12,7 @@ def AsynRun(command: string)
         }
         var notify_popup_id = msg->popup_create(options)
 
-        var outbuf = $"輸出(#{command_list[0]})"
+        var outbuf = $"輸出({command})"
         try
             bufnr(outbuf)->deletebufline(1, bufnr(outbuf)->getbufinfo()[0].linecount)
         catch
