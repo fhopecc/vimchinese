@@ -282,3 +282,4 @@ t[字] => 直到(till)下個字前
 
 Learning Vim as a Language. Ben McCormick.
 [vi 指令完整清單]https://hea-www.harvard.edu/~fine/Tech/vi.html
+- [中文文案排版指北](https://github.com/sparanoid/chinese-copywriting-guidelines) 

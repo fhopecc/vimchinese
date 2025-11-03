@@ -8,8 +8,9 @@ command! ExecutePython execute ':AsyncRun py ' .. expand('%')
 def TestPython()
     w!
     py3 from zhongwen.python import find_testfile
-    var testfile = py3eval("find_testfile(r'" .. expand('%') .. "')")
-    execute ':AsynRun py '  .. testfile
+    var testfile = py3eval($"find_testfile(r'{expand('%')}')")
+    var command: string = $':AsyncRun py {testfile}'
+    execute command
 enddef
 command! TestPython call TestPython()
 
