@@ -22,9 +22,6 @@ map <buffer> <leader>O <cmd>setlocal foldlevel=2<cr>
 # <leader>e -> 網頁表達
 map <buffer> <leader>e <cmd>call <sid>ToHTML()<cr>
 
-# <leader>P -> 公布至洄瀾打狗人網站
-map <buffer> <leader>P <cmd>call <sid>Post()<cr>
-
 # :ToDOCX -> 轉成 docx 檔
 command -buffer ToDOCX call ToDOCX()
 
@@ -49,7 +46,7 @@ EOF
 enddef
 
 # 公布至洄瀾打狗人網站
-command! Post AsyncRun py -m fhopecc.洄瀾打狗人札記 %
+command! Post AsyncRun py -m fhopecc.洄瀾打狗人札記 -p %
 
 # command! -buffer Post 
 
