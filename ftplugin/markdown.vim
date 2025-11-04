@@ -49,19 +49,25 @@ EOF
 enddef
 
 # 公布至洄瀾打狗人網站
-def Post()
-    py3 << EOF
-from fhopecc.洄瀾打狗人札記 import 張貼
-from pathlib import Path
-import logging
-import vim
-file = vim.eval('expand("%:p")')
-logging.getLogger().setLevel(logging.ERROR)
-張貼(file)
-logging.getLogger().setLevel(logging.INFO)
-vim.command(f'echo "【{Path(file).stem}】已張貼至洄瀾打狗人。"')
-EOF
-enddef
+command! Post {
+    var 
+    AsyncRun py  
+} 
+# command! -buffer Post 
+
+# def Post()
+#     py3 << EOF
+# from fhopecc.洄瀾打狗人札記 import 張貼
+# from pathlib import Path
+# import logging
+# import vim
+# file = vim.eval('expand("%:p")')
+# logging.getLogger().setLevel(logging.ERROR)
+# 張貼(file)
+# logging.getLogger().setLevel(logging.INFO)
+# vim.command(f'echo "【{Path(file).stem}】已張貼至洄瀾打狗人。"')
+# EOF
+# enddef
 
 # 審核意見轉通知
 def ToInform()

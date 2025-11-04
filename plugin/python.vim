@@ -2,14 +2,14 @@ vim9script
 ### Python 檔案編輯相關函數及命令 ###
 
 # 執行編輯中程式
-command! ExecutePython execute ':AsyncRun py ' .. expand('%')
+command! ExecutePython AsyncRun py %
 
 # 測試編輯中腳本
 def TestPython()
     w!
     py3 from zhongwen.python import find_testfile
     var testfile = py3eval($"find_testfile(r'{expand('%')}')")
-    var command: string = $':AsyncRun py {testfile}'
+    var command: string = $'AsyncRun py {testfile}'
     execute command
 enddef
 command! TestPython call TestPython()

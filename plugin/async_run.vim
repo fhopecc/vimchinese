@@ -1,9 +1,10 @@
 vim9script
 
 # 非同步執行程式
-export def AsyncRun(command: string)
+def AsyncRun(command: string)
     try
-        var command_list = split(command)
+        var expanded_command = command->substitute('%', expand('%')->escape(' \'), 'g')
+        var command_list = split(expanded_command)
         var msg: string = $"執行 {command}"
         var options = {
             'line': 1, 
