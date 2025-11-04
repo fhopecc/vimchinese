@@ -1,7 +1,7 @@
 vim9script
 
 # 非同步執行程式
-def AsyncRun(command: string)
+export def AsyncRun(command: string)
     try
         var command_list = split(command)
         var msg: string = $"執行 {command}"
