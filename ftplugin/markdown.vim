@@ -49,10 +49,8 @@ EOF
 enddef
 
 # 公布至洄瀾打狗人網站
-command! Post {
-    var 
-    AsyncRun py  
-} 
+command! Post AsyncRun py -m fhopecc.洄瀾打狗人札記 %
+
 # command! -buffer Post 
 
 # def Post()
