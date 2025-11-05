@@ -5,14 +5,14 @@ def AsyncRun(command: string)
     try
         var expanded_command = command->substitute('%', expand('%')->escape(' \'), 'g')
         var command_list = split(expanded_command)
-        var msg: string = $"執行 {command}"
+        var msg: string = $"執行 {expanded_command}"
         var options = {
             'line': 1, 
             'col': (winwidth(0) - msg->strdisplaywidth()) / 2
         }
         var notify_popup_id = msg->popup_create(options)
 
-        var outbuf = $"輸出({command->substitute('[ \\]', '_', 'g')}"
+        var outbuf = $"輸出({expanded_command->substitute('[ \\]', '_', 'g')}"
         try
             bufnr(outbuf)->deletebufline(1, bufnr(outbuf)->getbufinfo()[0].linecount)
         catch
@@ -25,9 +25,14 @@ def AsyncRun(command: string)
             'err_name': outbuf, 
             'out_msg': 0, 
             'err_msg': 0, 
-            'exit_cb': (j, e) => AsyncRunCallback(outbuf, notify_popup_id, j, e)
+            'exit_cb': (j, e) => AsyncRunCallback(expanded_command, outbuf, notify_popup_id, j, e)
         }
         var job = job_start(command_list, job_options)
+        if job->job_status() == 'fail'
+            notify_popup_id->popup_close() 
+            var err_msg = $"{command}執行失敗！"
+            err_msg->popup_notification({})
+        endif
     catch
         echom 'AsyncRun發生錯誤：'
         echom v:throwpoint
@@ -36,7 +41,7 @@ def AsyncRun(command: string)
 enddef
 command! -nargs=1 AsyncRun call <sid>AsyncRun(<q-args>)
 
-def AsyncRunCallback(outbuf: string, notify_popup_id: number, job: job, status: number)
+def AsyncRunCallback(command: string, outbuf: string, notify_popup_id: number, job: job, status: number)
     try
         const ls = bufnr(outbuf)->getbufline(1, '$')
         var out = []
