@@ -74,10 +74,11 @@ def AsyncRunCallback(command: string, outbuf: string, notify_popup_id: number, j
             nmap <buffer> ]] <cmd>/File .\+, line \d\+<cr>
             nmap <buffer> [[ <cmd>?File .\+, line \d\+<cr>
         endif
-        notify_popup_id->popup_close() 
     catch 
         echom 'AsyncRunCallback發生錯誤：'
         echom v:throwpoint
         echom v:errmsg
+    finally
+        notify_popup_id->popup_close() 
     endtry
 enddef
