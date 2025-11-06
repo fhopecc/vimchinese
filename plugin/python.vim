@@ -2,7 +2,10 @@ vim9script
 ### Python 檔案編輯相關函數及命令 ###
 
 # 執行編輯中程式
-command! ExecutePython AsyncRun py %
+command! ExecutePython {
+    w!
+    AsyncRun py %
+}
 
 # 測試編輯中腳本
 def TestPython()
