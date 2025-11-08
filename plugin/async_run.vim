@@ -23,8 +23,8 @@ def AsyncRun(command: string)
             'err_io': 'buffer', 
             'out_name': outbuf, 
             'err_name': outbuf, 
-            'out_msg': 0, 
-            'err_msg': 0, 
+            'out_msg': 1, 
+            'err_msg': 1, 
             'exit_cb': (j, e) => AsyncRunCallback(expanded_command, outbuf, notify_popup_id, j, e)
         }
         var job = job_start(command_list, job_options)
@@ -44,14 +44,14 @@ command! -nargs=1 AsyncRun call <sid>AsyncRun(<q-args>)
 def AsyncRunCallback(command: string, outbuf: string, notify_popup_id: number, job: job, status: number)
     try
         const ls = bufnr(outbuf)->getbufline(1, '$')
-        var out = []
+        var linecount = bufnr(outbuf)->getbufinfo()[0].linecount
+        echom $"lc:{linecount}"
         if len(join(ls, '')) > 0
+            var ln: number = 0
             for l in ls
-                const decoded_l = iconv(l, 'cp950', 'utf-8')
-                out->add(decoded_l)
+                ln = ln + 1
+                iconv(l, 'cp950', 'utf-8')->setbufline(bufnr(outbuf), ln)
             endfor
-            setbufline(bufnr(outbuf), 1, [])
-            setbufline(bufnr(outbuf), 1, out)
             execute 'buf ' .. outbuf
 
             # 刪除所有自定義 ID (> 3) 的高亮匹配
@@ -63,6 +63,7 @@ def AsyncRunCallback(command: string, outbuf: string, notify_popup_id: number, j
             endfor
 
             var total_lines = 0
+            const out = bufnr(outbuf)->getbufline(1, '$')
             for line_text in out
                 total_lines += 1 
                 if line_text->match('Error') >= 0
