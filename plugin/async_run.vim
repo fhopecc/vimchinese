@@ -45,7 +45,6 @@ def AsyncRunCallback(command: string, outbuf: string, notify_popup_id: number, j
     try
         const ls = bufnr(outbuf)->getbufline(1, '$')
         var linecount = bufnr(outbuf)->getbufinfo()[0].linecount
-        echom $"lc:{linecount}"
         if len(join(ls, '')) > 0
             var ln: number = 0
             for l in ls
