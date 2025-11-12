@@ -134,6 +134,11 @@ def GetWordDefine()
     @+ = res
 enddef
 
+def QueryKeyword(keyword: string)
+    execute $"AsyncRun py -m zhongwen.智 -k {keyword}"
+enddef
+command! -nargs=1 K call <sid>QueryKeyword(<q-args>)
+
 def CopyMessageHistory(count: number = 10)
     # 執行 :messages 命令並將其輸出捕獲到一個新的暫存器 (register) 'a' 中
     # 命令 :redir @a 會將所有後續的輸出重定向到暫存器 'a'
