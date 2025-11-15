@@ -37,6 +37,7 @@ from zhongwen.檔 import 取檔名補全選項
 import vim
 import jedi
 file = vim.eval("expand('%')")
+_dir = vim.eval("expand('%:p:h')")
 cb = vim.current.buffer
 text = '\n'.join(cb)
 _a, lno, colno, _a, _a = map(lambda s: int(s), vim.eval('getcursorcharpos()'))
@@ -61,7 +62,7 @@ suggest += 取法規補全選項(text, lno, colno)
 suggest += 取強調詞補全選項(text, lno, colno)
 suggest += 取簡稱補全選項(text, lno, colno)
 suggest += 取詞補全選項(text, lno, colno)
-suggest += 取檔名補全選項(text, lno, colno)
+suggest += 取檔名補全選項(text, lno, colno, _dir)
 EOS
     return {'words': py3eval("suggest"), 'refresh': 'always'}
 enddef
