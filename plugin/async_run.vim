@@ -23,8 +23,8 @@ def AsyncRun(command: string)
             'err_io': 'buffer', 
             'out_name': outbuf, 
             'err_name': outbuf, 
-            'out_msg': 1, 
-            'err_msg': 1, 
+            'out_msg': 0, 
+            'err_msg': 0, 
             'exit_cb': (j, e) => AsyncRunCallback(expanded_command, outbuf, notify_popup_id, j, e)
         }
         var job = job_start(command_list, job_options)

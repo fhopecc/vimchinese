@@ -57,8 +57,8 @@ command! -nargs=+ GTrans :call popup_atcursor(py3eval("翻譯('<args>')"), {})
 vmap T y:GTrans <c-r>"<cr>
 # command! -nargs=+ Def :call chinese#query('<args>')
 
-# 單字問萌典，單字以上詢問谷歌雙子星模型
-def QueryLLM(question: string)
+# 諮詢
+def Query(question: string)
     b:question = question
     py3 << EOF
 from zhongwen.文 import 查萌典
@@ -67,13 +67,16 @@ import vim
 問題 = vim.eval("b:question")
 if len(問題)==1:
     rs = 查萌典(問題)
-elif len(問題) > 30:
+elif 問題[0]=="問" or len(問題) > 30:
     rs = 詢問(問題, 不輸出回答=True).splitlines()
+elif 問題[0]=="搜" or len(問題) < 30:
+    c = f"AsyncRun cmd.exe /c start https://www.google.com/search?q={問題}"
+    vim.command(c)
+    rs = None
 EOF
-    if question->strchars() > 1 && question->strchars() < 30
-        Google(question)
-    else
-        @* = join(py3eval("rs"), "\n") # 結果複製至剪貼簿
+    var rs = py3eval("rs")
+    if type(rs) != v:t_none
+        @* = join(rs, "\n") # 結果複製至剪貼簿
         popup_clear(1)
         var opts: dict<any> = {
             'title': b:question .. '【ctrl-j/k 捲動上/下，ctrl-q 關閉】'
@@ -81,7 +84,7 @@ EOF
         call popup_create(py3eval("rs"), opts)
     endif
 enddef
-command! -nargs=1 Q call <sid>QueryLLM(<q-args>)
+command! -nargs=1 Q call <sid>Query(<q-args>)
 
 def Google(query: string)
     var command = $":AsyncRun cmd.exe /c start https://www.google.com/search?q={query}"
