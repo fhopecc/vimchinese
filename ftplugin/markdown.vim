@@ -48,36 +48,11 @@ enddef
 # 公布至洄瀾打狗人網站
 command! Post AsyncRun py -m fhopecc.洄瀾打狗人札記 -p %
 
-# command! -buffer Post 
-
-# def Post()
-#     py3 << EOF
-# from fhopecc.洄瀾打狗人札記 import 張貼
-# from pathlib import Path
-# import logging
-# import vim
-# file = vim.eval('expand("%:p")')
-# logging.getLogger().setLevel(logging.ERROR)
-# 張貼(file)
-# logging.getLogger().setLevel(logging.INFO)
-# vim.command(f'echo "【{Path(file).stem}】已張貼至洄瀾打狗人。"')
-# EOF
-# enddef
-
 # 審核意見轉通知
 def ToInform()
-    %s/聲復\(本室.\+一案\)，謹擬具處理意見\(如說明二\)\?，簽請鑒核。/聲復\1，核復如說明二，請查照辦理見復。/ge
-    %s/依據\(.\+函\)辦理。/復\1。/ge
-    %s/旨案.\+，擬具處理意見如次：/核復事項：/ge
-    %s/宜蘭縣政府/貴府/ge
-    %s/宜蘭縣立殯葬管理所/貴場/ge
-    %s/該府/貴府/ge
-    %s/該場/貴場/ge
-    %s/據復：/承復：/ge
-    %s/擬復請/請/ge
-    %s/擬復//ge
-    %s/其餘通知事項.\+//ge
-    %s/擬奉核可後，.\+//ge
+    py3 << EOF
+from zhongwen.文 import 
+EOF
 enddef
 command! -buffer ToInform call ToInform()
 

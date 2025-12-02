@@ -43,10 +43,6 @@ text = '\n'.join(cb)
 _a, lno, colno, _a, _a = map(lambda s: int(s), vim.eval('getcursorcharpos()'))
 colno -= 1 # 插入模式游標欄數係插入新字元之位置，即游標之前字元數加1。
 suggest = []
-if vim.eval("&filetype") == 'python': 
-    code = text
-    script = jedi.Script(code, path=file)
-    suggest += [{'word':c.complete, 'abbr':c.name, 'kind':c.type} for c in script.complete(lno, colno)]
 if vim.eval("&filetype") == 'vim': 
     cl = vim.eval("getline('.')")
     completiontype = vim.eval("getcompletiontype(getline('.'))")
@@ -58,6 +54,11 @@ if vim.eval("&filetype") == 'vim':
         vimcomp = vim.eval(cmd)
         if vimcomp: 
             suggest += [{'word':s[len(cword):], 'abbr':s, 'kind':completiontype} for s in vimcomp]
+if vim.eval("&filetype") == 'python' or vim.eval("&filetype") == 'vim':
+    code = text
+    script = jedi.Script(code, path=file)
+    suggest += [{'word':c.complete, 'abbr':c.name, 'kind':c.type} for c in script.complete(lno, colno)]
+
 suggest += 取法規補全選項(text, lno, colno)
 suggest += 取強調詞補全選項(text, lno, colno)
 suggest += 取簡稱補全選項(text, lno, colno)
