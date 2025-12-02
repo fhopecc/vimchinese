@@ -51,7 +51,9 @@ command! Post AsyncRun py -m fhopecc.洄瀾打狗人札記 -p %
 # 審核意見轉通知
 def ToInform()
     py3 << EOF
-from zhongwen.文 import 
+from zhongwen.文 import 審核意見轉通知
+import vim
+vim.current.line = 審核意見轉通知(vim.current.line)
 EOF
 enddef
 command! -buffer ToInform call ToInform()
