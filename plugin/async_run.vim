@@ -54,12 +54,12 @@ def AsyncRunCallback(command: string, outbuf: string, notify_popup_id: number, j
             execute 'buf ' .. outbuf
 
             # 刪除所有自定義 ID (> 3) 的高亮匹配
-            var matches = getmatches()
-            for m in matches
-                if m.id > 3
-                    matchdelete(m.id)
-                endif
-            endfor
+            # var matches = getmatches()
+            # for m in matches
+            #     if m.id > 3
+            #         matchdelete(m.id)
+            #     endif
+            # endfor
 
             var total_lines = 0
             const out = bufnr(outbuf)->getbufline(1, '$')
