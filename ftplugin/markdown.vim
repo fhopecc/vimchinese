@@ -45,8 +45,12 @@ file = vim.eval('expand("%:p")')
 EOF
 enddef
 
+def Post(): void
+    w!
+    AsyncRun py -m fhopecc.洄瀾打狗人札記 -p %
+enddef
 # 公布至洄瀾打狗人網站
-command! Post AsyncRun py -m fhopecc.洄瀾打狗人札記 -p %
+command! Post Post()
 
 # 審核意見轉通知
 def ToInform()
