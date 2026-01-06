@@ -135,5 +135,4 @@ def ExportToPPTX()
         system(open_cmd)
     endif
 enddef
-command! ToPPTX call ExportToPPTX()
-#command! -buffer ToPPTX call ExportToPPTX()
+command! -buffer ToPPTX call ExportToPPTX()
