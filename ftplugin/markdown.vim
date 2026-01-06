@@ -98,14 +98,42 @@ def! g:IsInMath(): bool
     return false
 enddef
 
-def ToPPT()
-    w!
-    let pptx = expand("%:p:r") . ".pptx"
-    let powerpnt = "C:\\Program Files\\Microsoft Office\\root\\Office16\\POWERPNT.exe"
-    if hostname() == 'HLAO1K-013OLD'
-        let powerpnt = "C:\\Program Files\\Microsoft Office\\Office14\\POWERPNT.exe"
+def ExportToPPTX()
+    # 1. 自動儲存當前檔案
+    silent write
+
+    # 2. 獲取當前檔案路徑資訊
+    var full_path = expand('%:p')        # 完整絕對路徑
+    var extension = expand('%:e')        # 副檔名
+    var base_name = expand('%:p:r')      # 不含副檔名的完整路徑
+    var pptx_path = base_name .. '.pptx' # 目標 pptx 路徑
+
+    if extension != 'md' && extension != 'markdown'
+        echoerr "錯誤：目前檔案不是 Markdown 格式"
+        return
     endif
-    " execute("silent :! pandoc % -F mermaid-filter.cmd -o " . pptx)
-    execute("silent :! pandoc % -o " . pptx)
-    execute("silent :! \"" . powerpnt . "\" /S " . pptx)
+
+    # 3. 執行 Pandoc 轉檔
+    echo "正在轉檔為 PPTX..."
+    # execute("silent :! pandoc % -F mermaid-filter.cmd -o " . pptx)
+    # 增加 mermaid-filter
+    var pandoc_cmd = printf('pandoc "%s" -o "%s"', full_path, pptx_path)
+    var result = system(pandoc_cmd)
+
+    # 檢查 pandoc 執行是否成功 (v:shell_error 為 0 表示成功)
+    if v:shell_error != 0
+        echoerr "Pandoc 執行失敗: " .. result
+        return
+    endif
+
+    echo "轉檔完成：" .. pptx_path
+
+    # 4. 根據作業系統自動開啟 PPTX
+    var open_cmd = printf('start "" "%s"', pptx_path)
+
+    if !empty(open_cmd)
+        system(open_cmd)
+    endif
 enddef
+command! ToPPTX call ExportToPPTX()
+#command! -buffer ToPPTX call ExportToPPTX()
