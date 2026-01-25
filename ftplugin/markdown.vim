@@ -13,9 +13,6 @@ noremap <buffer> gk k
 noremap <buffer> J gJ
 noremap <buffer> gJ J
 
-# <leader>c -> 搜尋內容
-map <buffer> <leader>c <cmd>Leaderf line --popup --no-auto-preview<cr>
-
 # <leader>O -> 顯示目次
 map <buffer> <leader>O <cmd>setlocal foldlevel=2<cr>
 
