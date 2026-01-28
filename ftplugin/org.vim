@@ -23,10 +23,10 @@ def ToHTML()
 enddef
 map <buffer> <leader>e <cmd>call <sid>ToHTML()<cr>
 
-def ToDOCX()
+def ToDOCX(count: number)
     w!
-    AsyncRun py -m zhongwen.org -d -f %
+    var cmd = "AsyncRun py -m zhongwen.org -f % -d " .. count
+    execute cmd 
 enddef
-
 # :ToDOCX -> 轉成 docx 檔
-command -buffer ToDOCX call ToDOCX()
+command -buffer -nargs=? ToDOCX ToDOCX(empty(<q-args>) ? 0 : str2nr(<q-args>))
