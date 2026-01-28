@@ -25,7 +25,7 @@ map <buffer> <leader>e <cmd>call <sid>ToHTML()<cr>
 
 def ToDOCX(count: number)
     w!
-    var cmd = "AsyncRun py -m zhongwen.org -f % -d " .. count
+    var cmd = "AsyncRun py -m zhongwen.org  -d -n " .. count .. " -f %"
     execute cmd 
 enddef
 # :ToDOCX -> 轉成 docx 檔
