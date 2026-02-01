@@ -32,7 +32,7 @@ enddef
 command -buffer -nargs=? ToDOCX ToDOCX(empty(<q-args>) ? 0 : str2nr(<q-args>))
 
 def ShowTodos()
-    var cmd = "AsyncRun py -m zhongwen.org  -t -d ".. g:wpath
+    var cmd = "AsyncRun py -m zhongwen.org  -t -d " .. g:wpath
     execute cmd
 enddef
 command -buffer ShowTodos ShowTodos()
