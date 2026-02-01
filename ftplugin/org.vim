@@ -25,8 +25,14 @@ map <buffer> <leader>e <cmd>call <sid>ToHTML()<cr>
 
 def ToDOCX(count: number)
     w!
-    var cmd = "AsyncRun py -m zhongwen.org  -d -n " .. count .. " -f %"
+    var cmd = "AsyncRun py -m zhongwen.org  -w -n " .. count .. " -f %"
     execute cmd 
 enddef
 # :ToDOCX -> 轉成 docx 檔
 command -buffer -nargs=? ToDOCX ToDOCX(empty(<q-args>) ? 0 : str2nr(<q-args>))
+
+def ShowTodos()
+    var cmd = "AsyncRun py -m zhongwen.org  -t -d ".. g:wpath
+    execute cmd
+enddef
+command -buffer ShowTodos ShowTodos()
