@@ -33,6 +33,9 @@ command -buffer -nargs=? ToDOCX ToDOCX(empty(<q-args>) ? 0 : str2nr(<q-args>))
 
 def ShowTodos()
     var cmd = "AsyncRun py -m zhongwen.org  -t -d " .. g:wpath
+    if current_host == 'HLAO-013'
+        cmd = "AsyncRun py -m zhongwen.org -t -d " .. g:wpath .. " 'D:\\審計\\11_兼辦資訊'"
+    endif
     execute cmd
 enddef
 command -buffer ShowTodos ShowTodos()
