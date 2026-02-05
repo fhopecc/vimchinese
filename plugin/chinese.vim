@@ -104,7 +104,7 @@ enddef
 
 # K -> 查中文字義、英詞中文譯詞、連結 URL 網頁。
 def GetWordDefine()
-    py3 from zhongwen.文 import geturl, 翻譯, 查萌典
+    py3 from zhongwen.文 import geturl, 翻譯, 查萌典, 取路徑
     var WORD = expand('<cWORD>') # 含特殊字元關鍵字
     var keyword = WORD
     WORD = substitute(WORD, '"', '', 'g')
