@@ -102,9 +102,20 @@ def SwitchChar()
     exec 'normal cl' .. sc
 enddef
 
-# K -> 查中文字義、英詞中文譯詞、連結 URL 網頁。
+# K -> 查中文字義、英詞中文譯詞、連結 URL 網頁、連結本地檔案路徑。
 def GetWordDefine()
-    py3 from zhongwen.文 import geturl, 翻譯, 查萌典, 取路徑
+    py3 <<EOS
+from zhongwen.文 import geturl, 翻譯, 查萌典, 取路徑
+import vim
+import os
+line = vim.eval('getline(".")')
+try:
+    PATH = 取路徑(line)[0].group(0)
+    os.system(f'start {PATH}')
+except IndexError:
+    PATH = ''
+EOS
+    var PATH = py3eval("PATH")
     var WORD = expand('<cWORD>') # 含特殊字元關鍵字
     var keyword = WORD
     WORD = substitute(WORD, '"', '', 'g')
@@ -115,7 +126,9 @@ def GetWordDefine()
     # 取游標字元
     var char = strcharpart(getline('.'), charcol('.') - 1, 1)
 
-    if WORD =~# '^\S\+://' # URL
+    if !empty(PATH)
+        echo PATH
+    elseif WORD =~# '^\S\+://' # URL
         res = py3eval("geturl('" .. WORD .. "')")
         keyword = res
         var cmd = '!start ' .. res
