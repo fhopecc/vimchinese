@@ -50,33 +50,4 @@ EOS
 enddef
 command! GotoDefineFile call GotoDefineFile()
 
-def ShowDocument()
-    py3 << trim EOS
-import vim, jedi
-f = vim.eval("expand('%')")
-c = '\n'.join(vim.current.buffer)
-script = jedi.Script(code=c, path=f)
-_, l, c, *_ = map(lambda s: int(s), vim.eval('getcursorcharpos()'))
-try:
-    vim.vars['doclines']= '\n\n'.join([d.docstring() for d in script.goto(l, c, follow_imports=True)]).splitlines()
-except (IndexError, AttributeError) as e: 
-    vim.vars['doclines'] = []
-EOS
-    popup_atcursor(g:doclines, {
-                   title: 'Docstring',
-                   padding: [0, 1, 0, 1]
-                  })
-enddef  
-command! ShowDocument call ShowDocument()
 
-# 打包佈署
-def DeployPython()
-    w!
-py3 << EOF
-import vim
-from zhongwen.python import 布署
-from pathlib import Path
-布署(Path(vim.current.buffer.name))
-EOF
-enddef
-command! DeployPython call DeployPython()
