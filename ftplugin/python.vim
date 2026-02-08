@@ -52,7 +52,6 @@ EOS
                   })
 enddef  
 command -buffer ShowDocument ShowDocument()
-
 # 打包佈署
 def DeployPython()
     w!
