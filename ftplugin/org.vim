@@ -40,7 +40,7 @@ def ShowTodos()
 enddef
 command -buffer ShowTodos ShowTodos()
 
-def PickOrgDate(): string
+def! g:PickOrgDate(): string
     # 初始化一個全域變數，確保它是空的
     g:picked_date = ""
 
