@@ -107,4 +107,4 @@ EOF
     return result
 enddef
 command -buffer PickOrgDate echo PickOrgDate()
-inoremap <buffer> <LocalLeader>d <c-r>=PickDate()<cr>
+inoremap <buffer> <LocalLeader>d <c-r>=PickOrgDate()<cr>
