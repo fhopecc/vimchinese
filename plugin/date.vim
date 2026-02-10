@@ -1,46 +1,6 @@
 vim9script
 
-setlocal nocursorline # 多文字高亮編輯行不習慣
-setlocal wrap # 中文自然段較長啟用自動 wrap
-setlocal expandtab      
-setlocal shiftwidth=2   
-setlocal softtabstop=2  
-setlocal tabstop=2
-
-# 依視窗寛度自動斷行，j k 移動以視窗行為主而非實際行
-noremap <buffer> j gj
-noremap <buffer> k gk
-noremap <buffer> gj j
-noremap <buffer> gk k
-
-# J -> 不加空格連接下行，以符合中文無空格文法。
-noremap <buffer> J gJ
-noremap <buffer> gJ J
-
-def ToHTML()
-    w!
-    AsyncRun py -m zhongwen.org -f %
-enddef
-map <buffer> <leader>e <cmd>call <sid>ToHTML()<cr>
-
-def ToDOCX(count: number)
-    w!
-    var cmd = "AsyncRun py -m zhongwen.org  -w -n " .. count .. " -f %"
-    execute cmd 
-enddef
-# :ToDOCX -> 轉成 docx 檔
-command -buffer -nargs=? ToDOCX ToDOCX(empty(<q-args>) ? 0 : str2nr(<q-args>))
-
-def ShowTodos()
-    var cmd = "AsyncRun py -m zhongwen.org -t -d " .. g:wpath
-    if hostname() == 'HLAO-013'
-        cmd = "AsyncRun py -m zhongwen.org -t -d " .. g:wpath .. " D:\\審計\\11_兼辦資訊"
-    endif
-    execute cmd
-enddef
-command -buffer ShowTodos ShowTodos()
-
-def PickOrgDate(): string
+def g:PickDate(): string
     # 初始化一個全域變數，確保它是空的
     g:picked_date = ""
 
@@ -67,7 +27,7 @@ def start_picker():
         try:
             date_str = cal.get_date()
             date_obj = datetime.strptime(date_str, '%Y-%m-%d')
-            res = date_obj.strftime('%Y-%m-%d %a')
+            res = date_obj.strftime('%Y-%m-%d')
             
             # 使用 vim.vars 確保變數能正確傳回 Vim
             vim.vars['picked_date'] = res
@@ -106,5 +66,3 @@ EOF
     
     return result
 enddef
-command -buffer PickOrgDate echo PickOrgDate()
-inoremap <buffer> <LocalLeader>d <c-r>=PickDate()<cr>
