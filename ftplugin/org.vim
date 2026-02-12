@@ -11,7 +11,6 @@ setlocal expandtab
 setlocal shiftwidth=2   
 setlocal softtabstop=2  
 setlocal tabstop=2
-nnoremap gl <cmd>GotoLink<cr>
 
 # 依視窗寛度自動斷行，j k 移動以視窗行為主而非實際行
 noremap <buffer> j gj
