@@ -78,7 +78,6 @@ EOF
     setlocal buftype=nofile    # 虛擬 Buffer，不對應實體檔案
     setlocal bufhidden=wipe    # 當 Buffer 被關閉時自動銷毀
     setlocal noswapfile        # 不產生交換檔
-    setlocal filetype=org      # 讓 Vim 或是插件辨認這是 Org 格式
 
     # 3. 將 Python 變數的內容寫入 Buffer
     python3 << EOF
@@ -86,7 +85,6 @@ EOF
 lines = agenda_data.split('\n')
 vim.current.buffer[:] = lines
 EOF
-    &eventignore = save_ei
     echo "Agenda 已更新"
 enddef
-command -buffer Agenda Agenda()
+command -buffer Agenda Agenda() | set filetype=org
