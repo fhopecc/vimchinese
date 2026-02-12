@@ -1,5 +1,4 @@
 vim9script
-
 # 防止重複載入
 if exists("b:did_ftplugin_org")
     finish
@@ -57,6 +56,8 @@ command -buffer PickOrgDate echo PickOrgDate()
 inoremap <buffer> <LocalLeader>d <c-r>=PickOrgDate()<cr>
 
 def Agenda()
+    var save_ei = &eventignore 
+    &eventignore = 'FileType'
     python3 << EOF
 from zhongwen.org import 排日程
 from pathlib import Path
@@ -85,6 +86,7 @@ EOF
 lines = agenda_data.split('\n')
 vim.current.buffer[:] = lines
 EOF
+    &eventignore = save_ei
     echo "Agenda 已更新"
 enddef
 command -buffer Agenda Agenda()
