@@ -56,8 +56,6 @@ command -buffer PickOrgDate echo PickOrgDate()
 inoremap <buffer> <LocalLeader>d <c-r>=PickOrgDate()<cr>
 
 def Agenda()
-    var save_ei = &eventignore 
-    &eventignore = 'FileType'
     python3 << EOF
 from zhongwen.org import 排日程
 from pathlib import Path
