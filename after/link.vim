@@ -9,4 +9,4 @@ EOS
     execute "edit +" ..  escape($'/{location}', ' ') .. " " .. fnameescape(path)
 enddef
 command! GotoLink call GotoLink() 
-nnoremap gx <cmd>GotoLink<cr>
+nnoremap gl <cmd>GotoLink<cr>
