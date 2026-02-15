@@ -22,6 +22,9 @@ noremap <buffer> gk k
 noremap <buffer> J gJ
 noremap <buffer> gJ J
 
+# gl -> 至連結
+noremap <buffer> gl <cmd>GotoLink<cr>
+
 def ToHTML()
     w!
     AsyncRun py -m zhongwen.org -f %
