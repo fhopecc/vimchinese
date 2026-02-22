@@ -37,7 +37,7 @@ def ToDOCX(count: number)
     execute cmd 
 enddef
 # :ToDOCX -> 轉成 docx 檔
-command -buffer -nargs=? ToDOCX ToDOCX(empty(<q-args>) ? 0 : str2nr(<q-args>))
+command! -buffer -nargs=? ToDOCX ToDOCX(empty(<q-args>) ? 0 : str2nr(<q-args>))
 
 def ShowTodos()
     var cmd = "AsyncRun py -m zhongwen.org -t -d " .. g:wpath
