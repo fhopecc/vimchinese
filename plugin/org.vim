@@ -32,3 +32,10 @@ EOF
     echo "Agenda 已更新"
 enddef
 command Agenda Agenda()
+
+def Post(): void
+    w!
+    AsyncRun py -m fhopecc.洄瀾打狗人札記 -p %
+enddef
+# 公布至洄瀾打狗人網站
+command! Post Post()
