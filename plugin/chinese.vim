@@ -11,6 +11,9 @@ vmap K y:Q <c-r>"<cr>
 # 字元切換
 nmap ~ <scriptcmd>SwitchChar()<cr>
 
+# 顯示行事曆
+map <F9> <cmd>Agenda<cr>
+
 #====   雙鍵   ====#
 
 # 搜尋檔案
