@@ -57,3 +57,16 @@ EOS
 enddef
 command -buffer PickOrgDate echo PickOrgDate()
 inoremap <buffer> <LocalLeader>d <c-r>=PickOrgDate()<cr>
+
+def! g:DoPickSchduled()
+  py3 << EOS
+from zhongwen.時 import 擇日
+pick_date = f'SCHDULED: <{擇日():%Y-%m-%d %a}>'
+EOS
+  var pos = getcurpos()
+  var result = py3eval("pick_date")
+  setline('.', strpart(getline('.'), 0, pos[2] - 1) .. result .. strpart(getline('.'), pos[2] - 1))
+  # 將游標移動到插入內容之後
+  cursor(pos[1], pos[2] + len(result))
+enddef
+command! -bar PickSchduled g:DoPickScheduled()

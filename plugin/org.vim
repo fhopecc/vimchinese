@@ -6,7 +6,6 @@ from zhongwen.org import 排日程
 from pathlib import Path
 import socket
 import vim
-# 這裡放入你之前寫好的 get_agenda_as_string 函數邏輯
 # 為了範例簡潔，這裡模擬一個回傳字串
 
 ds = Path(r'g:\我的雲端硬碟')
@@ -31,7 +30,7 @@ vim.current.buffer[:] = lines
 EOF
     echo "Agenda 已更新"
 enddef
-command Agenda Agenda()
+command! Agenda Agenda()
 
 def Post(): void
     w!
@@ -39,3 +38,39 @@ def Post(): void
 enddef
 # 公布至洄瀾打狗人網站
 command! Post Post()
+
+def MarkDone()
+    # 1. 向上搜尋最近的 TODO 標題行
+    var task_start_num = search('^\*\+ TODO', 'bnW')
+    if task_start_num == 0
+        echo "找不到上方的 TODO 任務。"
+        return
+    endif
+
+    # 2. 鎖定範圍：標題行 + 下一行 (時間戳記)
+    var task_end_num = task_start_num + 1
+    b:original_lines = getline(task_start_num, task_end_num)
+    b:task_start = task_start_num
+    b:task_end = task_end_num
+
+    # 3. 透過 Python 介面處理
+    python3 << EOF
+try:
+    from zhongwen.org import 標記完成
+    import vim
+
+    raw_lines = vim.eval("b:original_lines")
+    
+    updated_lines = 標記完成(raw_lines).split('\n')
+
+    # 寫回 Vim Buffer
+    start_idx = int(vim.eval("b:task_start")) - 1
+    end_idx = int(vim.eval("b:task_end"))
+    vim.current.buffer[start_idx:end_idx] = updated_lines
+    
+    print("任務已成功更新 (via import)。")
+except Exception as e:
+    print(f"錯誤: {str(e)}")
+EOF
+enddef
+command! MarkDone MarkDone()
