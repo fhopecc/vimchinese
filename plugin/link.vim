@@ -10,9 +10,9 @@ link = 取行內連結(vim.current.line)
 if link['類型'] == '檔案連結':
     path = Path(vim.eval("expand('%:p:h')"))
     path = path / link['路徑']
-    os.system(f'start {path}')
+    vim.command(f'!start {path}')
 elif link['類型'] == 'URL':
-    os.system(f'start {link['路徑']}')
+    vim.command(f'!start {link['路徑']}')
 EOS
     var link_type = py3eval("link['類型']")
     if link_type == '檔案搜尋連結'
@@ -21,4 +21,5 @@ EOS
         execute "edit +" ..  escape($'/{location}', ' ') .. " " .. fnameescape(path)
     endif
 enddef
-nnoremap gl <scriptcmd>GotoLink()<cr>
+command! GotoLink call <sid>GotoLink()
+nnoremap gl <cmd>GotoLink<cr>
