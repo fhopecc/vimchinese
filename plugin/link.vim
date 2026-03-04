@@ -22,4 +22,3 @@ EOS
     endif
 enddef
 nnoremap gl <scriptcmd>GotoLink()<cr>
-# ** [[file:01.1150302提供資料\花蓮縣消防局無人機作業手冊(1140110).doc][花蓮縣消防局無人機作業手冊]]
