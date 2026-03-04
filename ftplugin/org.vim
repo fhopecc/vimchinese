@@ -25,11 +25,12 @@ noremap <buffer> gJ J
 # gl -> 至連結
 noremap <buffer> gl <cmd>GotoLink<cr>
 
+# <space>e -> 顯示網頁
 def ToHTML()
     w!
     AsyncRun py -m zhongwen.org -f %
 enddef
-map <buffer> <leader>e <cmd>call <sid>ToHTML()<cr>
+map <buffer> <leader>e <scriptcmd>ToHTML()<cr>
 
 def ToDOCX(count: number)
     w!
