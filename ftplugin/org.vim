@@ -71,3 +71,13 @@ EOS
   cursor(pos[1], pos[2] + len(result))
 enddef
 command! -bar PickSchduled g:DoPickScheduled()
+
+# 審核意見轉通知
+def ToInform()
+    py3 << EOF
+from zhongwen.文 import 審核意見轉通知
+import vim
+vim.current.line = 審核意見轉通知(vim.current.line)
+EOF
+enddef
+command! -buffer ToInform call ToInform()
