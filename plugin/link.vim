@@ -7,6 +7,10 @@ from pathlib import Path
 import vim
 import os
 link = 取行內連結(vim.current.line)
+if link is None:
+    link = {"類型":"無法解析", 
+            "連結":vim.current.line
+           }
 if link['類型'] == '檔案連結':
     path = Path(vim.eval("expand('%:p:h')"))
     path = path / link['路徑']
@@ -19,6 +23,9 @@ EOS
         var path = py3eval("link['路徑']")
         var location = py3eval("link['定位點']")
         execute "edit +" ..  escape($'/{location}', ' ') .. " " .. fnameescape(path)
+    elseif link_type == '無法解析'
+        var m = py3eval("link['連結']")
+        echo m 
     endif
 enddef
 command! GotoLink call <sid>GotoLink()
