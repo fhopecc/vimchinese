@@ -81,3 +81,5 @@ vim.current.line = 審核意見轉通知(vim.current.line)
 EOF
 enddef
 command! -buffer ToInform call ToInform()
+
+
