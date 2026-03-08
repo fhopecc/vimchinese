@@ -250,3 +250,22 @@ autocmd CursorHold * set nohlsearch
 hi Search guibg=Red 
 
 ExpandFCommand()
+
+def SumPrices()
+    var end_line = getpos("'>")[1]
+    execute 'normal! "zy'
+    python3 << EOF
+from zhongwen.文 import 加總文內金額
+import vim
+import re
+
+selected_text = vim.eval('@z')
+print(selected_text)
+print(加總文內金額(selected_text))
+vim.command(f"call setreg('r', '{加總文內金額(selected_text)}')")
+EOF
+    var total_sum = getreg('r')
+    var result_text = "加總金額為 " .. total_sum .. " 元"
+    append(end_line, result_text)
+enddef
+command! -range SumPrices SumPrices()
