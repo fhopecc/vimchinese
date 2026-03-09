@@ -66,3 +66,37 @@ EOF
     
     return result
 enddef
+
+def ChangeDate()
+    var line = getline('.')
+    var col = col('.')
+    # 尋找游標位置附近的日期格式 YYYY-M-D (或 YYYY-MM-DD)
+    var pattern = '\v\d{4}-\d{1,2}-\d{1,2}%(\s+[A-Z][a-z]{2})?'
+    var pos = matchstrpos(line, pattern, 0)
+    
+    # 遍歷所有匹配項，找出包含游標的那一個
+    while pos[0] != -1
+        if col >= pos[1] + 1 && col <= pos[2] + 1
+            var new_date_str = g:PickDate()
+            if new_date_str != "" && !new_date_str->match('^Error:') && !new_date_str->match('^Python Error:')
+                python3 << EOF
+import vim
+from datetime import datetime
+new_date_val = vim.eval('new_date_str')
+date_obj = datetime.strptime(new_date_val, '%Y-%m-%d')
+formatted_res = date_obj.strftime('%Y-%m-%d %a')
+vim.command(f"let formatted_res = '{formatted_res}'")
+EOF
+                var prefix = line->strpart(0, pos[1])
+                var suffix = line->strpart(pos[2])
+                setline('.', prefix .. g:formatted_res .. suffix)
+                unlet g:formatted_res
+            endif
+            return
+        endif
+        pos = matchstrpos(line, pattern, pos[2])
+    endwhile
+    echo "未在游標下找到日期格式"
+enddef
+
+command! ChangeDate ChangeDate()
