@@ -78,7 +78,7 @@ def ChangeDate()
     while pos[0] != -1
         if col >= pos[1] + 1 && col <= pos[2] + 1
             var new_date_str = g:PickDate()
-            if new_date_str != "" && !new_date_str->match('^Error:') && !new_date_str->match('^Python Error:')
+            if new_date_str != "" && match(new_date_str, '^Error:') == -1 && match(new_date_str, '^Python Error:') == -1
                 var prefix = line->strpart(0, pos[1])
                 var suffix = line->strpart(pos[2])
                 setline('.', prefix .. new_date_str .. suffix)
