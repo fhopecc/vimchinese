@@ -27,7 +27,7 @@ def start_picker():
         try:
             date_str = cal.get_date()
             date_obj = datetime.strptime(date_str, '%Y-%m-%d')
-            res = date_obj.strftime('%Y-%m-%d')
+            res = date_obj.strftime('%Y-%m-%d %a')
             
             # 使用 vim.vars 確保變數能正確傳回 Vim
             vim.vars['picked_date'] = res
@@ -79,18 +79,9 @@ def ChangeDate()
         if col >= pos[1] + 1 && col <= pos[2] + 1
             var new_date_str = g:PickDate()
             if new_date_str != "" && !new_date_str->match('^Error:') && !new_date_str->match('^Python Error:')
-                python3 << EOF
-import vim
-from datetime import datetime
-new_date_val = vim.eval('new_date_str')
-date_obj = datetime.strptime(new_date_val, '%Y-%m-%d')
-formatted_res = date_obj.strftime('%Y-%m-%d %a')
-vim.command(f"let formatted_res = '{formatted_res}'")
-EOF
                 var prefix = line->strpart(0, pos[1])
                 var suffix = line->strpart(pos[2])
-                setline('.', prefix .. g:formatted_res .. suffix)
-                unlet g:formatted_res
+                setline('.', prefix .. new_date_str .. suffix)
             endif
             return
         endif
