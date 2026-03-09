@@ -1,6 +1,6 @@
 vim9script
 
-def g:PickDate(): string
+def! g:PickDate(): string
     # 初始化一個全域變數，確保它是空的
     g:picked_date = ""
 
