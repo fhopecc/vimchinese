@@ -8,6 +8,8 @@ nmap K <scriptcmd>GetWordDefine()<cr>
 # 選取字串查大語言模型
 vmap K y:Q <c-r>"<cr>
 
+nmap cK <cmd>ChangeDate<cr>
+
 # 字元切換
 nmap ~ <scriptcmd>SwitchChar()<cr>
 

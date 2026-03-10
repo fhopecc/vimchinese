@@ -70,23 +70,32 @@ enddef
 def ChangeDate()
     var line = getline('.')
     var col = col('.')
-    # 尋找游標位置附近的日期格式 YYYY-M-D (或 YYYY-MM-DD)
-    var pattern = '\v\d{4}-\d{1,2}-\d{1,2}%(\s+[A-Z][a-z]{2})?'
+    # 優化後的正則：匹配 YYYY-MM-DD 及其選配的星期
+    var pattern = '\v\d{4}-\d{1,2}-\d{1,2}%(\s+[A-Za-z]+)?'
+    
+    # pos[0]: string, pos[1]: start_idx, pos[2]: end_idx
     var pos = matchstrpos(line, pattern, 0)
     
-    # 遍歷所有匹配項，找出包含游標的那一個
-    while pos[0] != -1
-        if col >= pos[1] + 1 && col <= pos[2] + 1
+    # 檢查 pos[1] (開始位置) 而不是 pos[0] (字串內容)
+    while pos[1] != -1
+        # Vim 的 col 是 1-based，pos 索引是 0-based
+        # 判斷游標是否落在該日期範圍內
+        if col >= pos[1] + 1 && col <= pos[2]
             var new_date_str = g:PickDate()
-            if new_date_str != "" && match(new_date_str, '^Error:') == -1 && match(new_date_str, '^Python Error:') == -1
-                var prefix = line->strpart(0, pos[1])
-                var suffix = line->strpart(pos[2])
+            
+            # 確保有回傳值且不是錯誤訊息
+            if !empty(new_date_str) && new_date_str !~ '^Error:' && new_date_str !~ '^Python Error:'
+                var prefix = strpart(line, 0, pos[1])
+                var suffix = strpart(line, pos[2])
                 setline('.', prefix .. new_date_str .. suffix)
+                echo "日期已更新"
             endif
             return
         endif
+        # 繼續尋找下一個匹配項，從目前的結束位置之後開始
         pos = matchstrpos(line, pattern, pos[2])
     endwhile
+    
     echo "未在游標下找到日期格式"
 enddef
 

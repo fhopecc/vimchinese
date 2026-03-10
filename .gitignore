@@ -154,3 +154,4 @@ plugin/.chinese.vim.swp
 *.swp
 *.err
 Readme.html
+.aider*
