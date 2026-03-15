@@ -8,8 +8,6 @@ nmap K <scriptcmd>GetWordDefine()<cr>
 # 選取字串查大語言模型
 vmap K y:Q <c-r>"<cr>
 
-nmap cK <cmd>ChangeDate<cr>
-
 # 字元切換
 nmap ~ <scriptcmd>SwitchChar()<cr>
 
@@ -17,6 +15,12 @@ nmap ~ <scriptcmd>SwitchChar()<cr>
 map <F9> <cmd>Agenda<cr>
 
 #====   雙鍵   ====#
+#
+# 至光標詞
+nmap gK <cmd>GotoKeyword<cr>
+
+# 編輯光標詞
+nmap cK <cmd>ChangeDate<cr>
 
 # 搜尋檔案
 map <leader>f <cmd>Leaderf file --popup .<cr>
@@ -271,3 +275,18 @@ EOF
     append(end_line, result_text)
 enddef
 command! -range SumPrices SumPrices()
+
+def GotoKeyword()
+    # 至光標詞指定之位置
+    py3 << EOS
+from zhongwen.文 import 辨詞
+import vim
+光標位置 = int(vim.eval("charcol('.')"))
+詞 = 辨詞(vim.current.line, 光標位置)
+if 詞['類'] == 'URL':
+    url = 詞["詞"]
+    vim.command(f':!start {url}')
+    vim.command(f':echom "至 {url}"')
+EOS
+enddef 
+command! GotoKeyword GotoKeyword()
