@@ -1,5 +1,11 @@
 vim9script
 
+def GetOrgTimestamp(): string
+    # 取得 org 時戳，形式如 2026-3-15 SUN 8:17。
+    py3 import datetime
+    return py3eval( "datetime.datetime.now().strftime('%Y-%m-%d %a %H:%M')")
+enddef
+
 def Agenda()
     python3 << EOF
 from zhongwen.org import 排日程
@@ -39,42 +45,6 @@ enddef
 # 公布至洄瀾打狗人網站
 command! Post Post()
 
-# def MarkDone()
-#     # 1. 向上搜尋最近的 TODO 標題行
-#     var task_start_num = search('^\*\+ TODO', 'bnW')
-#     if task_start_num == 0
-#         echo "找不到上方的 TODO 任務。"
-#         return
-#     endif
-
-#     # 2. 鎖定範圍：標題行 + 下一行 (時間戳記)
-#     var task_end_num = task_start_num + 1
-#     b:original_lines = getline(task_start_num, task_end_num)
-#     b:task_start = task_start_num
-#     b:task_end = task_end_num
-
-#     # 3. 透過 Python 介面處理
-#     python3 << EOF
-# try:
-#     from zhongwen.org import 標記完成
-#     import vim
-
-#     raw_lines = vim.eval("b:original_lines")
-    
-#     updated_lines = 標記完成(raw_lines).split('\n')
-
-#     # 寫回 Vim Buffer
-#     start_idx = int(vim.eval("b:task_start")) - 1
-#     end_idx = int(vim.eval("b:task_end"))
-#     vim.current.buffer[start_idx:end_idx] = updated_lines
-    
-#     print("任務已成功更新 (via import)。")
-# except Exception as e:
-#     print(f"錯誤: {str(e)}")
-# EOF
-# enddef
-# command! MarkDone MarkDone()
-
 def MarkDone()
     # 1. 向上搜尋最近的標題行 (以 * 開頭)
     # 'b': backward, 'W': 不迴繞, 'n': 不移動實際游標
@@ -92,9 +62,8 @@ def MarkDone()
         var new_title = substitute(title_line, '\<TODO\>', 'DONE', '')
         setline(title_lnum, new_title)
         
-        # 3. 在標題下方插入 CLOSED 時間戳記 (活躍轉不活躍 [])
-        var py_code = "import datetime; datetime.datetime.now().strftime('%Y-%m-%d %a %H:%M')"
-        var closed_date = pyeval(py_code)
+        # 標題下插入 CLOSED 時間戳記 (活躍轉不活躍 [])
+        var closed_date = GetOrgTimestamp()
         var closed_line = "CLOSED: [" .. closed_date .. "]"
         append(title_lnum, closed_line)
 
