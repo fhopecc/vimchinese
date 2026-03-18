@@ -258,21 +258,15 @@ hi Search guibg=Red
 ExpandFCommand()
 
 def SumPrices()
-    var end_line = getpos("'>")[1]
-    execute 'normal! "zy'
+    # SumPrices 命令，加總選取文字內所有金額，並將加總結果存入 p 暫存器，p 係意指 price。
+    execute 'normal! gv"zy'
     python3 << EOF
 from zhongwen.文 import 加總文內金額
-import vim
-import re
-
 selected_text = vim.eval('@z')
-print(selected_text)
-print(加總文內金額(selected_text))
-vim.command(f"call setreg('r', '{加總文內金額(selected_text)}')")
+result_text = f"加總金額為{加總文內金額(selected_text)}元"
+vim.command(f"call setreg('p', {repr(result_text)})")
+vim.command(f"echom {repr(result_text)}")
 EOF
-    var total_sum = getreg('r')
-    var result_text = "加總金額為 " .. total_sum .. " 元"
-    append(end_line, result_text)
 enddef
 command! -range SumPrices SumPrices()
 
