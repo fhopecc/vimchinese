@@ -6,6 +6,13 @@ def GetOrgTimestamp(): string
     return py3eval( "datetime.datetime.now().strftime('%Y-%m-%d %a %H:%M')")
 enddef
 
+def Schduled()
+    py3 from zhongwen.時 import 擇日
+    var schduled = 'SCHEDULED: ' .. py3eval('擇日().strftime("<%Y-%m-%d %a>")')
+    append(line('.'), schduled)
+enddef
+command! Schduled Schduled()
+
 def Agenda()
     python3 << EOF
 from zhongwen.org import 排日程
