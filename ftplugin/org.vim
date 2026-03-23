@@ -82,4 +82,3 @@ EOF
 enddef
 command! -buffer ToInform call ToInform()
 
-
