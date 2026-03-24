@@ -1,4 +1,5 @@
 vim9script
+py3 from zhongwen.時 import 擇日
 
 def! g:PickDate(): string
     # 初始化一個全域變數，確保它是空的
@@ -81,8 +82,7 @@ def ChangeDate()
         # Vim 的 col 是 1-based，pos 索引是 0-based
         # 判斷游標是否落在該日期範圍內
         if col >= pos[1] + 1 && col <= pos[2]
-            var new_date_str = g:PickDate()
-            
+            var new_date_str = py3eval('擇日().strftime("%Y-%m-%d %a")')
             # 確保有回傳值且不是錯誤訊息
             if !empty(new_date_str) && new_date_str !~ '^Error:' && new_date_str !~ '^Python Error:'
                 var prefix = strpart(line, 0, pos[1])
