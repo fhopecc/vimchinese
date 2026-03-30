@@ -1,9 +1,4 @@
 vim9script
-# 防止重複載入
-if exists("b:did_ftplugin_org")
-    finish
-endif
-b:did_ftplugin_org = 1
 
 setlocal nocursorline # 多文字高亮編輯行不習慣
 setlocal wrap # 中文自然段較長啟用自動 wrap
@@ -81,4 +76,3 @@ vim.current.line = 審核意見轉通知(vim.current.line)
 EOF
 enddef
 command! -buffer ToInform call ToInform()
-
