@@ -90,3 +90,13 @@ def MarkDone()
     endif
 enddef
 command! -bar MarkDone MarkDone()
+
+command! CountHeader1 {
+    var count = 0
+    for line in getline(1, '$')
+        if line =~ '^\* '
+            count += 1
+        endif
+    endfor
+    echo $"標題一計{count}個"
+}
