@@ -91,12 +91,12 @@ def MarkDone()
 enddef
 command! -bar MarkDone MarkDone()
 
-command! CountHeader1 {
+command! HeadingNum {
     var count = 0
-    for line in getline(1, '$')
+    for line in getline(1, line('.'))
         if line =~ '^\* '
             count += 1
         endif
     endfor
-    echo $"標題一計{count}個"
+    echo $"第{count}個標題"
 }
